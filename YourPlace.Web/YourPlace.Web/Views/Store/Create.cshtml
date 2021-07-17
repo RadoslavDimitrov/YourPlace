@@ -1,0 +1,55 @@
+﻿@model CreateStoreViewModel;
+
+@{ 
+    ViewBag.Title = "Create Shop";
+}
+
+
+<div class="row">
+    <form method="post">
+        <div class="form-group">
+            <label asp-for="Name">Name</label>
+            <input asp-for="Name" class="form-control" placeholder="Best name for your shop!">
+            <span asp-validation-for="Name" class="small text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Type">Shop type</label>
+            <input asp-for="Type" class="form-control" placeholder="Cosmetics, Restourant,Etc...">
+            <span asp-validation-for="Type" class="small text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Description">Description</label>
+            <input asp-for="Description" class="form-control" placeholder="Some good shop....">
+            <span asp-validation-for="Description" class="small text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="OpenHour">Open from</label>
+            <input asp-for="OpenHour" class="form-control" placeholder="7,8...">
+            <span asp-validation-for="OpenHour" class="small text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="CloseHour">Close</label>
+            <input asp-for="CloseHour" class="form-control" placeholder="19,20....">
+            <span asp-validation-for="CloseHour" class="small text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="PictureUrl">Picture Url</label>
+            <input asp-for="PictureUrl" class="form-control" placeholder="Place a path to your picture">
+            <span asp-validation-for="PictureUrl" class="small text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Town">Picture Url</label>
+            <input asp-for="Town" class="form-control" placeholder="Sofia, Plovdiv, Etc....">
+            <span asp-validation-for="Town" class="small text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="District">Picture Url</label>
+            <input asp-for="District" class="form-control" placeholder="Drujba, Mladost, Etc....">
+            <span asp-validation-for="District" class="small text-danger"></span>
+        </div>
+
+        <input class="btn btn-primary mt-3" type="submit" value="Save" />
+
+    </form>
+</div>
+

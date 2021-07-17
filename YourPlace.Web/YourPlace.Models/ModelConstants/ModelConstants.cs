@@ -5,9 +5,12 @@ namespace YourPlace.Models.ModelConstants
     public static class ModelConstants
     {
         //Store constants
+        public const int StoreNameMinLenght = 3;
         public const int StoreNameMaxLenght = 40;
         public const int StoreMinOpenHour = 0;
         public const int StoreMaxOpenHour = 24;
+        public const int StoreDescriptionMinLenght = 10;
+
 
 
         //StoreService constants

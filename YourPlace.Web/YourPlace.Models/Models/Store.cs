@@ -28,6 +28,9 @@ namespace YourPlace.Models.Models
         [Required]
         public string Type { get; set; }
 
+        [Required]
+        public string Description { get; set; }
+
         public string TownId { get; set; }
         [Required]
         public Town Town { get; set; }
