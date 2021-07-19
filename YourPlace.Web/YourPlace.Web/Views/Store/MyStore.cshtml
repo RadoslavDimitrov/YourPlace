@@ -1,0 +1,20 @@
+﻿@model ListStoreViewModel;
+
+@{ 
+    ViewBag.Title = "MyStore";
+}
+
+<div>
+    <img src="@Model.PictureUrl" alt="Sample Photo" />
+    <h2>@Model.Name - Store name</h2>
+    <h2>@Model.Type - Store type</h2>
+    <h2>@Model.Description</h2>
+    <h2>@Model.OpenHour - Opens at </h2>
+    <h2>@Model.CloseHour - Close at</h2>
+    <h2>@Model.Town - At city</h2>
+    <h2>@Model.District</h2>
+
+
+    <a asp-controller="StoreService" asp-action="Create" asp-route-id="@Model.Id" class="btn btn-primary">Create service</a>
+
+</div>

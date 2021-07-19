@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
+using System.Security.Claims;
+using YourPlace.Data.Data;
 using YourPlace.Models.Models;
 using YourPlace.Web.Models.Store;
 
@@ -7,6 +10,13 @@ namespace YourPlace.Web.Controllers
 {
     public class StoreController : Controller
     {
+        private readonly ApplicationDbContext data;
+
+        public StoreController(ApplicationDbContext data)
+        {
+            this.data = data;
+        }
+
         public IActionResult Create()
         {
             return this.View();
@@ -15,6 +25,7 @@ namespace YourPlace.Web.Controllers
         [HttpPost]
         public IActionResult Create(CreateStoreViewModel model)
         {
+
             if (!ModelState.IsValid)
             {
                 return this.View(model);
@@ -59,8 +70,34 @@ namespace YourPlace.Web.Controllers
                 District = district
             };
 
+            this.data.Stores.Add(store);
+            this.data.SaveChanges();
 
-            return this.View();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var storeDto = new ListStoreViewModel
+            {
+                Id = store.Id,
+                Name = store.Name,
+                Type = store.Type,
+                Description = store.Description,
+                OpenHour = store.OpenHour,
+                CloseHour = store.CloseHour,
+                Town = store.Town.Name,
+                District = store.District.Name,
+                PictureUrl = store.PictureUrl
+            };
+
+            //return this.RedirectToAction("MyStore", "Store", userId);
+            return this.RedirectToAction("MyStore", "Store", storeDto);
+        }
+
+
+        public IActionResult MyStore(ListStoreViewModel model)
+        {
+            //TODO get user store from DB
+
+            return View(model);
         }
     }
 }

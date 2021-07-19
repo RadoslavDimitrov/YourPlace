@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-using static YourPlace.Models.ModelConstants.ModelConstants;
+using static YourPlace.Models.ModelConstants.ModelConstants.TownConstants;
 
 namespace YourPlace.Models.Models
 {
@@ -18,7 +18,7 @@ namespace YourPlace.Models.Models
         public string Id { get; set; }
 
         [Required]
-        [MaxLength(DistrictNameMaxLenght)]
+        [MaxLength(TownNameMaxLenght)]
         public string Name { get; set; }
 
         public ICollection<District> Districts { get; set; }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-using static YourPlace.Models.ModelConstants.ModelConstants;
+using static YourPlace.Models.ModelConstants.ModelConstants.RaitingConstants;
 
 namespace YourPlace.Models.Models
 {

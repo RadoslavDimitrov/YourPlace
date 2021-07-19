@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-using static YourPlace.Models.ModelConstants.ModelConstants;
+using static YourPlace.Models.ModelConstants.ModelConstants.StoreServiceConstants;
 
 namespace YourPlace.Models.Models
 {

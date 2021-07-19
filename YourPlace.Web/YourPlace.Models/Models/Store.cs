@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using YourPlace.Models.ModelConstants;
 using YourPlace.Models.Models;
 
-using static YourPlace.Models.ModelConstants.ModelConstants;
+using static YourPlace.Models.ModelConstants.ModelConstants.StoreConstants;
 
 namespace YourPlace.Models.Models
 {
