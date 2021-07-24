@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 
 using YourPlace.Data.Data;
 using YourPlace.Web.Infrastructure;
+using YourPlace.Models.Models;
 
 namespace YourPlace.Web
 {
@@ -31,7 +32,7 @@ namespace YourPlace.Web
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<IdentityUser>(options => 
+            services.AddDefaultIdentity<User>(options => 
                 {
                 options.Password.RequireDigit = false;
                 options.Password.RequireNonAlphanumeric = false;

@@ -42,6 +42,10 @@ namespace YourPlace.Web.Controllers
             }
 
             //TODO check in DB for existing districts and town names
+            if(!data.Districts.Any(d => d.Name == model.District))
+            {
+
+            }
 
             var district = new District
             {

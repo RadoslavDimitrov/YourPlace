@@ -31,18 +31,20 @@ namespace YourPlace.Models.Models
         [Required]
         public string Description { get; set; }
 
-        public string TownId { get; set; }
-        [Required]
-        public Town Town { get; set; }
-        public string DistrictId { get; set; }
-        [Required]
-        public District District { get; set; }
+        
         [Range(StoreMinOpenHour, StoreMaxOpenHour)]
         public int OpenHour { get; set; }
         [Range(StoreMinOpenHour, StoreMaxOpenHour)]
         public int CloseHour { get; set; }
 
         public string PictureUrl { get; set; }
+
+        public string TownId { get; set; }
+        [Required]
+        public Town Town { get; set; }
+        public string DistrictId { get; set; }
+        [Required]
+        public District District { get; set; }
 
         public ICollection<StoreService> StoreServices { get; set; }
         public ICollection<Comment> Comments { get; set; }
