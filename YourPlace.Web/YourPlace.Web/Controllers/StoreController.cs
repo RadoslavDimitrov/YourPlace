@@ -1,21 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
+
 using YourPlace.Data.Data;
 using YourPlace.Models.Models;
 using YourPlace.Web.Models.Store;
 
 namespace YourPlace.Web.Controllers
 {
+    [Authorize]
     public class StoreController : Controller
     {
         private readonly ApplicationDbContext data;
+        private readonly UserManager<User> userManager;
 
-        public StoreController(ApplicationDbContext data)
+        public StoreController(ApplicationDbContext data, UserManager<User> userManager)
         {
             this.data = data;
+            this.userManager = userManager;
         }
+
 
         public IActionResult Create()
         {
@@ -23,7 +31,7 @@ namespace YourPlace.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CreateStoreViewModel model)
+        public async Task<IActionResult> Create(CreateStoreViewModel model)
         {
 
             if (!ModelState.IsValid)
@@ -71,13 +79,16 @@ namespace YourPlace.Web.Controllers
                 CloseHour = model.CloseHour,
                 PictureUrl = model.PictureUrl,
                 Town = town,
-                District = district
+                District = district,
             };
+
+            var user = GetCurrentUser();
+
+            user.Store = store;
 
             this.data.Stores.Add(store);
             this.data.SaveChanges();
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var storeDto = new ListStoreViewModel
             {
@@ -100,8 +111,39 @@ namespace YourPlace.Web.Controllers
         public IActionResult MyStore(ListStoreViewModel model)
         {
             //TODO get user store from DB
+            var user = GetCurrentUser();
 
-            return View(model);
+            var userStoreId = user.StoreId;
+
+            var store = this.data.Stores
+                .Where(s => s.Id == userStoreId)
+                .Select(s => new ListStoreViewModel
+                {
+                    Name = s.Name,
+                    Description = s.Description,
+                    Type = s.Type,
+                    OpenHour = s.OpenHour,
+                    CloseHour = s.CloseHour,
+                    District = s.District.Name,
+                    PictureUrl = s.PictureUrl,
+                    Town = s.Town.Name,
+                    Id = s.Id
+                })
+                .FirstOrDefault();
+
+            return View(store);
+        }
+
+        private User GetCurrentUser()
+        {
+            var userId = GetCurrentUserId();
+
+            return this.data.Users.Where(u => u.Id == userId).FirstOrDefault();
+        }
+
+        private string GetCurrentUserId()
+        {
+            return User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
     }
 }
