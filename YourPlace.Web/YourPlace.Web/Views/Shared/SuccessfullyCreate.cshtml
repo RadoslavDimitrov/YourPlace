@@ -1,0 +1,11 @@
+﻿@model List<string>;
+
+@{
+    ViewBag.Title = "Successfully";
+}
+
+<h1>@Model[0] @Model[1]</h1>
+
+<a asp-action="mystore" asp-controller="store">
+    Click here to navigate to your store.
+</a>

@@ -7,7 +7,9 @@
 @if (Model == null)
 {
     <div>You don't have store yet</div>
-    <a asp-controller="Store" asp-action="Create" class="btn btn-primary">Create One</a>
+    <div class="mt-3">
+        <a asp-controller="Store" asp-action="Create" class="btn btn-primary">Create One</a>
+    </div>
 }
 else
 {
@@ -22,7 +24,7 @@ else
         <h2>@Model.District</h2>
 
 
-        <a asp-controller="StoreService" asp-action="Create" asp-route-id="@Model.Id" class="btn btn-primary">Create service</a>
+        <a asp-controller="StoreService" asp-action="Create" asp-route-storeId="@Model.Id" class="btn btn-primary">Create service</a>
 
     </div>
 }

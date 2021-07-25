@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
+
 using static YourPlace.Models.ModelConstants.ModelConstants.StoreConstants;
 
 namespace YourPlace.Web.Models.Store
@@ -31,5 +34,6 @@ namespace YourPlace.Web.Models.Store
 
         [Required]
         public string District { get; set; }
+
     }
 }

@@ -49,23 +49,35 @@ namespace YourPlace.Web.Controllers
                 return this.View(model);
             }
 
+            Town town;
+
+            if(!this.data.Towns.Any(t => t.Name == model.Town))
+            {
+                town = new Town
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = model.Town
+                };
+            }
+            else
+            {
+                town = this.data.Towns.Where(t => t.Name == model.Town).FirstOrDefault();
+            }
+
+            District district;
             //TODO check in DB for existing districts and town names
             if(!data.Districts.Any(d => d.Name == model.District))
             {
-
+                district = new District
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = model.District
+                };
             }
-
-            var district = new District
+            else
             {
-                Id = Guid.NewGuid().ToString(),
-                Name = model.District
-            };
-
-            var town = new Town
-            {
-                Id = Guid.NewGuid().ToString(),
-                Name = model.Town
-            };
+                district = this.data.Districts.Where(d => d.Name == model.District).FirstOrDefault();
+            }
 
             town.Districts.Add(district);
 
@@ -110,7 +122,6 @@ namespace YourPlace.Web.Controllers
 
         public IActionResult MyStore(ListStoreViewModel model)
         {
-            //TODO get user store from DB
             var user = GetCurrentUser();
 
             var userStoreId = user.StoreId;

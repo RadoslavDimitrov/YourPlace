@@ -19,22 +19,21 @@ namespace YourPlace.Web.Controllers
             this.data = data;
         }
 
-        public IActionResult Create()
+        public IActionResult Create(string storeId)
         {
             return this.View();
         }
 
         [HttpPost]
-        public IActionResult Create(CreateStoreServiceViewModel model)
+        public IActionResult Create(CreateStoreServiceViewModel model, string storeId)
         {
-            //var storeId = this.data.Stores.Where(s => s.owner.id == this.User.GetId);
 
-            //var store = this.data.Stores.Where(s => s.Id == id).FirstOrDefault();
+            var store = this.data.Stores.Where(s => s.Id == storeId).FirstOrDefault();
 
-            //if(store == null)
-            //{
-            //    return View("NotFound", ApplicationMessages.Exception.StoreDoesNotExist);
-            //}
+            if(store == null)
+            {
+                return View("NotFound", ApplicationMessages.Exception.StoreDoesNotExist);
+            }
 
             var storeService = new StoreService
             {
@@ -42,10 +41,10 @@ namespace YourPlace.Web.Controllers
                 Name = model.Name,
                 Description = model.Description,
                 Price = model.Price,
-                //Store = store
+                Store = store
             };
 
-            //store.StoreServices.Add(storeService);
+            store.StoreServices.Add(storeService);
 
             this.data.StoreServices.Add(storeService);
             this.data.SaveChanges();
@@ -56,7 +55,7 @@ namespace YourPlace.Web.Controllers
                 nameof(StoreService)
             };
 
-            return View("SuccesfyllyCreate", message);
+            return View("SuccessfullyCreate", message);
         }
     }
 }
