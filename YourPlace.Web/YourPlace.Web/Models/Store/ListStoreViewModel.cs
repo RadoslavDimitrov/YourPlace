@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
-
+using YourPlace.Models.Models;
 using static YourPlace.Models.ModelConstants.ModelConstants.StoreConstants;
 
 namespace YourPlace.Web.Models.Store
@@ -35,5 +34,6 @@ namespace YourPlace.Web.Models.Store
         [Required]
         public string District { get; set; }
 
+        public ICollection<StoreServices> StoreServices { get; set; } = new List<StoreServices>();
     }
 }

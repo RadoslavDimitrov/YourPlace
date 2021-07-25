@@ -7,9 +7,9 @@ using static YourPlace.Models.ModelConstants.ModelConstants.StoreServiceConstant
 
 namespace YourPlace.Models.Models
 {
-    public class StoreService
+    public class StoreServices
     {
-        public StoreService()
+        public StoreServices()
         {
             this.Id = Guid.NewGuid().ToString();
             this.bookedHours = new List<BookedHour>();

@@ -18,7 +18,7 @@ namespace YourPlace.Models.Models
         public string StoreServiceId { get; set; }
 
         [Required]
-        public StoreService StoreService { get; set; }
+        public StoreServices StoreService { get; set; }
 
         [Required]
         public string StoreServiceName { get; set; }

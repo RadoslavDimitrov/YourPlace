@@ -16,7 +16,7 @@ namespace YourPlace.Models.Models
             this.Id = Guid.NewGuid().ToString();
 
             this.Comments = new List<Comment>();
-            this.StoreServices = new List<StoreService>();
+            this.StoreServices = new List<StoreServices>();
             this.Raitings = new List<Raiting>();
         }
 
@@ -46,7 +46,7 @@ namespace YourPlace.Models.Models
         [Required]
         public District District { get; set; }
 
-        public ICollection<StoreService> StoreServices { get; set; }
+        public ICollection<StoreServices> StoreServices { get; set; }
         public ICollection<Comment> Comments { get; set; }
         public ICollection<Raiting> Raitings { get; set; }
 

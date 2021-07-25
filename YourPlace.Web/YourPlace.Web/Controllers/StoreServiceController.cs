@@ -35,7 +35,7 @@ namespace YourPlace.Web.Controllers
                 return View("NotFound", ApplicationMessages.Exception.StoreDoesNotExist);
             }
 
-            var storeService = new StoreService
+            var storeService = new StoreServices
             {
                 Id = Guid.NewGuid().ToString(),
                 Name = model.Name,
@@ -52,10 +52,79 @@ namespace YourPlace.Web.Controllers
             var message = new List<string>
             {
                 ApplicationMessages.Succsesfully.CreateStoreService,
-                nameof(StoreService)
+                nameof(StoreServices)
             };
 
             return View("SuccessfullyCreate", message);
+        }
+
+        public IActionResult Details(string storeServiceId)
+        {
+            var storeService = this.data.StoreServices.Where(st => st.Id == storeServiceId).FirstOrDefault();
+
+            if(storeService == null)
+            {
+                return this.View(storeServiceId);
+            }
+
+            var dto = new DetailsStoreServiceViewModel()
+            {
+                Id = storeService.Id,
+                Name = storeService.Name,
+                Description = storeService.Description,
+                Price = storeService.Price
+            };
+
+            return this.View(dto);
+        }
+
+        public IActionResult Edit(string storeServiceId)
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        public IActionResult Edit(DetailsStoreServiceViewModel model ,string storeServiceId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return this.View(storeServiceId);
+            }
+
+            if(!this.data.StoreServices.Any(st => st.Id == storeServiceId))
+            {
+                return this.View(storeServiceId);
+            }
+
+            var storeService = this.data.StoreServices.Where(st => st.Id == storeServiceId).FirstOrDefault();
+
+            storeService.Name = model.Name;
+            storeService.Description = model.Description;
+            storeService.Price = model.Price;
+
+            this.data.SaveChanges();
+
+            return this.RedirectToAction("MyStore", "Store");
+        }
+
+        public IActionResult Delete(string storeServiceId)
+        {
+            var storeService = this.data.StoreServices.Where(st => st.Id == storeServiceId).FirstOrDefault();
+
+            var store = this.data.Stores.Where(s => s.StoreServices.Any(st => st.Id == storeServiceId)).FirstOrDefault();
+
+            if(store == null)
+            {
+                return View("NotFound", ApplicationMessages.Exception.StoreDoesNotExist);
+            }
+
+            store.StoreServices.Remove(storeService);
+
+            this.data.StoreServices.Remove(storeService);
+
+            this.data.SaveChanges();
+
+            return this.RedirectToAction("MyStore", "Store");
         }
     }
 }

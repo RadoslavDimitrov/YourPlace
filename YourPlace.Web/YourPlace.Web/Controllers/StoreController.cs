@@ -27,11 +27,20 @@ namespace YourPlace.Web.Controllers
 
         public IActionResult Create()
         {
+            var user = this.GetCurrentUser();
+
+            var userStoreId = user.StoreId;
+
+            if(userStoreId != null)
+            {
+                return this.RedirectToAction("MyStore");
+            }
+
             return this.View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateStoreViewModel model)
+        public IActionResult Create(CreateStoreViewModel model)
         {
 
             if (!ModelState.IsValid)
@@ -141,6 +150,13 @@ namespace YourPlace.Web.Controllers
                     Id = s.Id
                 })
                 .FirstOrDefault();
+
+            var storeServices = this.data.StoreServices.Where(st => st.StoreId == store.Id).ToList();
+
+            foreach (var storeService in storeServices)
+            {
+                store.StoreServices.Add(storeService);
+            }
 
             return View(store);
         }

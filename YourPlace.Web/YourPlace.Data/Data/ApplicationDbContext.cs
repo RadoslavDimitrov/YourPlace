@@ -19,7 +19,7 @@ namespace YourPlace.Data.Data
         public DbSet<District> Districts { get; set; }
         public DbSet<Raiting> Raitings { get; set; }
         public DbSet<Store> Stores { get; set; }
-        public DbSet<StoreService> StoreServices { get; set; }
+        public DbSet<StoreServices> StoreServices { get; set; }
         public DbSet<Town> Towns { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
