@@ -6,9 +6,14 @@ namespace YourPlace.Models.Models
 {
     public class User : IdentityUser
     {
+        public User()
+            :base()
+        {
+            this.bookedHours = new List<BookedHour>();
+        }
         public string StoreId { get; set; }
         public Store Store { get; set; }
 
-        public ICollection<BookedHour> bookedHours { get; set; } = new List<BookedHour>();
+        public ICollection<BookedHour> bookedHours { get; set; }
     }
 }

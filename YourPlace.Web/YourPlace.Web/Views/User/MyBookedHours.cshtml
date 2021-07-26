@@ -1,19 +1,16 @@
 ﻿@model List<UserBookHourViewModel>;
 
-<div class="row">
+<div>
     @foreach (var hour in Model)
     {
         <div class="col-mb-3" mb-3>
-            @hour.StartFrom
+            @hour.StartFrom - hour
         </div>
         <div class="col-mb-3" mb-3>
-            @hour.StoreName
+            @hour.StoreName - Store name
         </div>
         <div class="col-mb-3" mb-3>
-            @hour.StoreService
-        </div>
-        <div class="col-mb-3" mb-3>
-            @hour.StoreServiceName
+            @hour.StoreServiceName - Store Service Name
         </div>
     }
 </div>

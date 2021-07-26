@@ -110,17 +110,30 @@ namespace YourPlace.Web.Controllers
 
             var user = this.data.Users.Where(u => u.Id == userId).FirstOrDefault();
 
-            var bookedHours = user.bookedHours.Select(bh => new UserBookHourViewModel
-            {
-                Id = bh.Id,
-                StartFrom = bh.StartFrom,
-                StoreName = bh.StoreName,
-                StoreServiceId = bh.StoreServiceId,
-                StoreServiceName = bh.StoreServiceName
-            })
-            .ToList();
+            var bookHour = this.data.BookedHours
+                .Where(b => b.UserId == userId)
+                .Select(b => new UserBookHourViewModel
+                {
+                    Id = b.Id,
+                    StartFrom = b.StartFrom,
+                    StoreName = b.StoreName,
+                    StoreServiceId = b.StoreServiceId,
+                    StoreServiceName = b.StoreServiceName
+                })
+                .ToList();
+                
 
-            return this.View(bookedHours);
+            //var bookedHours = user.bookedHours.Select(bh => new UserBookHourViewModel
+            //{
+            //    Id = bh.Id,
+            //    StartFrom = bh.StartFrom,
+            //    StoreName = bh.StoreName,
+            //    StoreServiceId = bh.StoreServiceId,
+            //    StoreServiceName = bh.StoreServiceName
+            //})
+            //.ToList();
+
+            return this.View(bookHour);
         }
     }
 }

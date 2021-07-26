@@ -24,6 +24,14 @@ namespace YourPlace.Data.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<User>(user =>
+            {
+                user.HasMany<BookedHour>(u => u.bookedHours)
+                .WithOne(b => b.User)
+                .HasForeignKey(u => u.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+            });
+
             base.OnModelCreating(builder);
         }
     }

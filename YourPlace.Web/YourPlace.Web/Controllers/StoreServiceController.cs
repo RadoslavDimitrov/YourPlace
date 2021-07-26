@@ -133,7 +133,9 @@ namespace YourPlace.Web.Controllers
                 .Where(st => st.Id == storeServiceId)
                 .FirstOrDefault();
 
-            var bookedHours = storeService.bookedHours.Select(b => b.StartFrom).ToList();
+            var bookedHours = this.data.BookedHours
+                .Where(bh => bh.StoreServiceId == storeServiceId)
+                .Select(b => b.StartFrom).ToList();
 
             var store = this.data.Stores.Where(s => s.Id == storeService.StoreId).FirstOrDefault();
 
