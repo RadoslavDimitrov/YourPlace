@@ -126,5 +126,73 @@ namespace YourPlace.Web.Controllers
 
             return this.RedirectToAction("MyStore", "Store");
         }
+
+        public IActionResult BookAnHour(string storeServiceId)
+        {
+            var storeService = this.data.StoreServices
+                .Where(st => st.Id == storeServiceId)
+                .FirstOrDefault();
+
+            var bookedHours = storeService.bookedHours.Select(b => b.StartFrom).ToList();
+
+            var store = this.data.Stores.Where(s => s.Id == storeService.StoreId).FirstOrDefault();
+
+            int storeOpen = store.OpenHour;
+            int storeClose = store.CloseHour;
+
+            List<int> freeHours = new List<int>();
+
+            for (int currHour = storeOpen; currHour < storeClose; currHour++)
+            {
+                if (!bookedHours.Contains(currHour))
+                {
+                    freeHours.Add(currHour);
+                }
+            }
+
+            var model = new BookAnHourViewModel
+            {
+                ShopName = storeService.Store.Name,
+                Price = storeService.Price,
+                StoreServiceName = storeService.Name,
+                FreeHours = freeHours,
+                StoreServiceId = storeService.Id
+            };
+
+            return this.View(model);
+        }
+
+        public IActionResult CreateAnHour(int hour, string storeName, string storeServiceName, string storeServiceId)
+        {
+            var hourToBook = new BookedHour
+            {
+                Id = Guid.NewGuid().ToString(),
+                StartFrom = hour,
+                StoreName = storeName,
+                StoreServiceName = storeServiceName,
+                StoreServiceId = storeServiceId
+            };
+
+            var storeService = this.data.StoreServices
+                .Where(st => st.Id == storeServiceId)
+                .FirstOrDefault();
+
+            storeService.bookedHours.Add(hourToBook);
+
+            var user = this.GetCurrentUser();
+
+            user.bookedHours.Add(hourToBook);
+
+            this.data.SaveChanges();
+
+            return RedirectToAction("MyBookedHours", "User");
+        }
+
+        private User GetCurrentUser()
+        {
+            var userId = this.User.GetId();
+
+            return this.data.Users.Where(u => u.Id == userId).FirstOrDefault();
+        }
     }
 }

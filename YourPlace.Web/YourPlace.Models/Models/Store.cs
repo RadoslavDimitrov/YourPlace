@@ -14,10 +14,6 @@ namespace YourPlace.Models.Models
         public Store()
         {
             this.Id = Guid.NewGuid().ToString();
-
-            this.Comments = new List<Comment>();
-            this.StoreServices = new List<StoreServices>();
-            this.Raitings = new List<Raiting>();
         }
 
         [Key]
@@ -46,9 +42,9 @@ namespace YourPlace.Models.Models
         [Required]
         public District District { get; set; }
 
-        public ICollection<StoreServices> StoreServices { get; set; }
-        public ICollection<Comment> Comments { get; set; }
-        public ICollection<Raiting> Raitings { get; set; }
+        public ICollection<StoreServices> StoreServices { get; set; } = new List<StoreServices>();
+        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+        public ICollection<Raiting> Raitings { get; set; } = new List<Raiting>(); 
 
 
     }

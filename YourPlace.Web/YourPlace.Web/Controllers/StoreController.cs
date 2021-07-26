@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 using YourPlace.Data.Data;
 using YourPlace.Models.Models;
 using YourPlace.Web.Models.Store;
+using YourPlace.Web.Models.StoreService;
 
 namespace YourPlace.Web.Controllers
 {
@@ -147,7 +149,8 @@ namespace YourPlace.Web.Controllers
                     District = s.District.Name,
                     PictureUrl = s.PictureUrl,
                     Town = s.Town.Name,
-                    Id = s.Id
+                    Id = s.Id,
+                    Raiting = s.Raitings.Select(r => r.StoreRaiting).Sum()
                 })
                 .FirstOrDefault();
 
@@ -161,6 +164,62 @@ namespace YourPlace.Web.Controllers
             return View(store);
         }
 
+        public IActionResult All()
+        {
+            List<StoreViewModel> stores = this.data.Stores
+                .Select(s => new StoreViewModel
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    Type = s.Type,
+                    Description = s.Description,
+                    PictureUrl = s.PictureUrl,
+                    OpenHour = s.OpenHour,
+                    CloseHour = s.CloseHour,
+                    Town = s.Town.Name,
+                    District = s.District.Name,
+                    Raiting = s.Raitings.Select(r => r.StoreRaiting).Sum()
+                })
+                .ToList();
+
+            return this.View(stores);
+        }
+
+        public IActionResult Visit(string storeId)
+        {
+            var store = this.data.Stores
+                .Where(s => s.Id == storeId)
+                .Select(s => new ListStoreViewModel
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    Type = s.Type,
+                    Description = s.Description,
+                    PictureUrl = s.PictureUrl,
+                    OpenHour = s.OpenHour,
+                    CloseHour = s.CloseHour,
+                    Town = s.Town.Name,
+                    District = s.District.Name,
+                    Raiting = s.Raitings.Select(r => r.StoreRaiting).Sum()
+                })
+                .FirstOrDefault();
+
+            if(store == null)
+            {
+                return RedirectToAction("All");
+            }
+
+            var storeServices = this.data.StoreServices.Where(st => st.StoreId == store.Id).ToList();
+
+            foreach (var storeService in storeServices)
+            {
+                store.StoreServices.Add(storeService);
+            }
+
+            return this.View(store);
+        }
+
+        //TODO place it in UserService
         private User GetCurrentUser()
         {
             var userId = GetCurrentUserId();
@@ -168,6 +227,7 @@ namespace YourPlace.Web.Controllers
             return this.data.Users.Where(u => u.Id == userId).FirstOrDefault();
         }
 
+        //TODO place it in UserService
         private string GetCurrentUserId()
         {
             return User.FindFirstValue(ClaimTypes.NameIdentifier);

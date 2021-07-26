@@ -1,0 +1,20 @@
+﻿@model List<UserBookHourViewModel>;
+
+<div class="row">
+    @foreach (var hour in Model)
+    {
+        <div class="col-mb-3" mb-3>
+            @hour.StartFrom
+        </div>
+        <div class="col-mb-3" mb-3>
+            @hour.StoreName
+        </div>
+        <div class="col-mb-3" mb-3>
+            @hour.StoreService
+        </div>
+        <div class="col-mb-3" mb-3>
+            @hour.StoreServiceName
+        </div>
+    }
+</div>
+

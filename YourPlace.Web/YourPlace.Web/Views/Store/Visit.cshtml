@@ -1,18 +1,9 @@
 ﻿@model ListStoreViewModel;
 
 @{
-    ViewBag.Title = "MyStore";
+    ViewBag.Title = "Visit store";
 }
 
-@if (Model == null)
-{
-    <div>You don't have store yet</div>
-    <div class="mt-3">
-        <a asp-controller="Store" asp-action="Create" class="btn btn-primary">Create One</a>
-    </div>
-}
-else
-{
 <div>
     <img src="@Model.PictureUrl" class="img-fluid" alt="Sample Photo" />
     <h2>@Model.Name - Store name</h2>
@@ -22,7 +13,6 @@ else
     <h2>@Model.CloseHour - Close at</h2>
     <h2>@Model.Town - At city</h2>
     <h2>@Model.District</h2>
-    <h2>@Model.Raiting</h2>
 
     @if (!Model.StoreServices.Any())
     {
@@ -30,16 +20,14 @@ else
     }
     else
     {
-        <table class="table">
+        <table class="table mt-3">
             <thead>
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Service Name</th>
                     <th scope="col">Service Description</th>
                     <th scope="col">Service Price</th>
-                    <th scope="col">Details</th>
-                    <th scope="col">Edit</th>
-                    <th scope="col">Delete</th>
+                    <th scope="col">Book an hour</th>
                 </tr>
             </thead>
             <tbody>
@@ -51,26 +39,20 @@ else
                         <td>@storeService.Description</td>
                         <td>@storeService.Price</td>
                         <td>
-                            <a asp-controller="StoreService" asp-action="Details" asp-route-storeServiceId="@storeService.Id" class="btn btn-primary">Details</a>
-                        </td>
-                        <td>
-                            <a asp-controller="StoreService" asp-action="Edit" asp-route-storeServiceId="@storeService.Id" class="btn btn-primary">Edit</a>
-                        </td>
-                        <td>
-                            <a asp-controller="StoreService" asp-action="Delete" asp-route-storeServiceId="@storeService.Id" class="btn btn-primary">Delete</a>
+                            <a asp-controller="StoreService" asp-action="BookAnHour" asp-route-storeServiceId="@storeService.Id" class="btn btn-primary">Book an hour</a>
                         </td>
                     </tr>
-
                 }
-
             </tbody>
         </table>
 
     }
 
     <div class="mt-3">
-        <a asp-controller="StoreService" asp-action="Create" asp-route-storeId="@Model.Id" class="btn btn-primary">Create service</a>
+        <a asp-controller="Comment" asp-action="Create" asp-route-storeId="@Model.Id" class="btn btn-primary">Leava a comment</a>
+    </div>
+    <div class="mt-3">
+        <a asp-controller="Raiting" asp-action="Give" asp-route-storeId="@Model.Id" class="btn btn-primary">Giva a raiting</a>
     </div>
 
 </div>
-}

@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using YourPlace.Data.Data;
 using YourPlace.Models.Models;
+using YourPlace.Web.Infrastructure;
 using YourPlace.Web.Models.User;
 
 namespace YourPlace.Web.Controllers
@@ -13,11 +15,13 @@ namespace YourPlace.Web.Controllers
     {
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
+        private readonly ApplicationDbContext data;
 
-        public UserController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, ApplicationDbContext data)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.data = data;
         }
 
         public IActionResult Register()
@@ -67,7 +71,7 @@ namespace YourPlace.Web.Controllers
 
             var user = await userManager.FindByNameAsync(model.Name);
 
-            if(user == null)
+            if (user == null)
             {
                 return this.InvalidUsernameOrPassword(model);
             }
@@ -81,7 +85,7 @@ namespace YourPlace.Web.Controllers
 
             await this.signInManager.SignInAsync(user, true);
 
-            return this.RedirectToAction("Index", "Home");
+            return this.RedirectToAction("All", "Store");
         }
 
         public IActionResult Logout()
@@ -98,6 +102,25 @@ namespace YourPlace.Web.Controllers
             ModelState.AddModelError(string.Empty, InvalidUsernameOrPassword);
 
             return this.View(model);
+        }
+
+        public IActionResult MyBookedHours()
+        {
+            var userId = this.User.GetId();
+
+            var user = this.data.Users.Where(u => u.Id == userId).FirstOrDefault();
+
+            var bookedHours = user.bookedHours.Select(bh => new UserBookHourViewModel
+            {
+                Id = bh.Id,
+                StartFrom = bh.StartFrom,
+                StoreName = bh.StoreName,
+                StoreServiceId = bh.StoreServiceId,
+                StoreServiceName = bh.StoreServiceName
+            })
+            .ToList();
+
+            return this.View(bookedHours);
         }
     }
 }

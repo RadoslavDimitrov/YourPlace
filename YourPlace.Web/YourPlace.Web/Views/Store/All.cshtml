@@ -1,0 +1,32 @@
+﻿@model List<StoreViewModel>;
+
+@{
+    ViewBag.Title = "Shops";
+}
+
+<div class="row">
+    @foreach (var store in @Model)
+    {
+        <div class="col-md-4">
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="@store.PictureUrl" alt="No image">
+                <div class="card-body">
+                    <h5 class="card-title">@store.Name</h5>
+                    <p class="card-text">@store.Description</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Open's at @store.OpenHour</li>
+                    <li class="list-group-item">Close in @store.CloseHour</li>
+                    <li class="list-group-item">@store.Town</li>
+                    <li class="list-group-item">@store.Description</li>
+                    <li class="list-group-item">@store.Raiting</li>
+                </ul>
+                <div class="card-body">
+                    <a asp-controller="Store" asp-action="Visit" asp-route-storeId="@store.Id" class="card-link">Visit</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+

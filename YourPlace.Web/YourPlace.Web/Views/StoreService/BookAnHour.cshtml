@@ -1,0 +1,27 @@
+﻿@model BookAnHourViewModel;
+
+<div class="col-mb-4">
+    <h2 class="mb-3">
+        @Model.ShopName
+    </h2>
+    <div class="mb-4">
+        @Model.StoreServiceName
+    </div>
+    <div class="mb-5">
+        @Model.Price
+    </div>
+    <div class="row">
+        @foreach (var freeHour in Model.FreeHours)
+        {
+        <div class="col-md-2 mb-3">
+            <a asp-controller="StoreService" 
+               asp-action="CreateAnHour" 
+               asp-route-hour="@freeHour" 
+               asp-route-storeName="@Model.ShopName" 
+               asp-route-storeServiceName="@Model.StoreServiceName"
+               asp-route-storeServiceId="@Model.StoreServiceId"
+               class="btn btn-primary">@freeHour</a>
+        </div>
+        }
+    </div>
+</div>

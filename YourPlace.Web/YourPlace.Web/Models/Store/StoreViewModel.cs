@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
-using YourPlace.Models.Models;
+
 using static YourPlace.Models.ModelConstants.ModelConstants.StoreConstants;
 
 namespace YourPlace.Web.Models.Store
 {
-    public class ListStoreViewModel
+    public class StoreViewModel
     {
         [Required]
         public string Id { get; set; }
@@ -35,7 +35,5 @@ namespace YourPlace.Web.Models.Store
         public string District { get; set; }
 
         public int? Raiting { get; set; }
-
-        public ICollection<StoreServices> StoreServices { get; set; } = new List<StoreServices>();
     }
 }
