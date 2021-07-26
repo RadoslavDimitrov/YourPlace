@@ -155,12 +155,16 @@ namespace YourPlace.Web.Controllers
                 })
                 .FirstOrDefault();
 
-            var storeServices = this.data.StoreServices.Where(st => st.StoreId == store.Id).ToList();
-
-            foreach (var storeService in storeServices)
+            if(store != null)
             {
-                store.StoreServices.Add(storeService);
+                var storeServices = this.data.StoreServices.Where(st => st.StoreId == store.Id).ToList();
+
+                foreach (var storeService in storeServices)
+                {
+                    store.StoreServices.Add(storeService);
+                }
             }
+            
 
             return View(store);
         }
