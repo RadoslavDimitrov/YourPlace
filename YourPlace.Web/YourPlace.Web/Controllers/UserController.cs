@@ -121,17 +121,7 @@ namespace YourPlace.Web.Controllers
                     StoreServiceName = b.StoreServiceName
                 })
                 .ToList();
-                
-
-            //var bookedHours = user.bookedHours.Select(bh => new UserBookHourViewModel
-            //{
-            //    Id = bh.Id,
-            //    StartFrom = bh.StartFrom,
-            //    StoreName = bh.StoreName,
-            //    StoreServiceId = bh.StoreServiceId,
-            //    StoreServiceName = bh.StoreServiceName
-            //})
-            //.ToList();
+               
 
             return this.View(bookHour);
         }

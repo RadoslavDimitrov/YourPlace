@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 using YourPlace.Data.Data;
 using YourPlace.Models.Models;
+using YourPlace.Web.Infrastructure;
 using YourPlace.Web.Models.Store;
 using YourPlace.Web.Models.StoreService;
 
@@ -222,15 +223,10 @@ namespace YourPlace.Web.Controllers
         //TODO place it in UserService
         private User GetCurrentUser()
         {
-            var userId = GetCurrentUserId();
+            var userId = this.User.GetId();
 
             return this.data.Users.Where(u => u.Id == userId).FirstOrDefault();
         }
 
-        //TODO place it in UserService
-        private string GetCurrentUserId()
-        {
-            return User.FindFirstValue(ClaimTypes.NameIdentifier);
-        }
     }
 }
