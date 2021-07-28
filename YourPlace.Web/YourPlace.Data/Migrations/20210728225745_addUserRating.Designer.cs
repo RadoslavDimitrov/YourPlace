@@ -10,8 +10,8 @@ using YourPlace.Data.Data;
 namespace YourPlace.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210726203753_AddUserToBookedHour")]
-    partial class AddUserToBookedHour
+    [Migration("20210728225745_addUserRating")]
+    partial class addUserRating
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -206,9 +206,15 @@ namespace YourPlace.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("StoreId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Comments");
                 });
@@ -233,7 +239,7 @@ namespace YourPlace.Data.Migrations
                     b.ToTable("Districts");
                 });
 
-            modelBuilder.Entity("YourPlace.Models.Models.Raiting", b =>
+            modelBuilder.Entity("YourPlace.Models.Models.Rating", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -244,6 +250,10 @@ namespace YourPlace.Data.Migrations
 
                     b.Property<int>("StoreRaiting")
                         .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -470,9 +480,9 @@ namespace YourPlace.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("YourPlace.Models.Models.User", "User")
-                        .WithMany("bookedHours")
+                        .WithMany("BookedHours")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("StoreService");
@@ -488,7 +498,15 @@ namespace YourPlace.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("YourPlace.Models.Models.User", "User")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Store");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("YourPlace.Models.Models.District", b =>
@@ -498,7 +516,7 @@ namespace YourPlace.Data.Migrations
                         .HasForeignKey("TownId");
                 });
 
-            modelBuilder.Entity("YourPlace.Models.Models.Raiting", b =>
+            modelBuilder.Entity("YourPlace.Models.Models.Rating", b =>
                 {
                     b.HasOne("YourPlace.Models.Models.Store", "Store")
                         .WithMany("Raitings")
@@ -569,7 +587,9 @@ namespace YourPlace.Data.Migrations
 
             modelBuilder.Entity("YourPlace.Models.Models.User", b =>
                 {
-                    b.Navigation("bookedHours");
+                    b.Navigation("BookedHours");
+
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

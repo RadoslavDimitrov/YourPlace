@@ -5,9 +5,9 @@ using static YourPlace.Models.ModelConstants.ModelConstants.RaitingConstants;
 
 namespace YourPlace.Models.Models
 {
-    public class Raiting
+    public class Rating
     {
-        public Raiting()
+        public Rating()
         {
             this.Id = Guid.NewGuid().ToString();
         }
@@ -22,5 +22,8 @@ namespace YourPlace.Models.Models
 
         [Required]
         public Store Store { get; set; }
+
+        [Required]
+        public string UserId { get; set; }
     }
 }

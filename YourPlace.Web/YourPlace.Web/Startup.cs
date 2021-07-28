@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using YourPlace.Data.Data;
 using YourPlace.Web.Infrastructure;
 using YourPlace.Models.Models;
+using YourPlace.Web.Services.Raiting;
 
 namespace YourPlace.Web
 {
@@ -39,9 +40,12 @@ namespace YourPlace.Web
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
                 })
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddControllersWithViews();
+
+            services.AddTransient<IRatingService, RatingService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

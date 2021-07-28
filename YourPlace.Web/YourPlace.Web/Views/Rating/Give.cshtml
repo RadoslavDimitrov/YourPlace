@@ -1,0 +1,17 @@
+﻿
+@using static YourPlace.Models.ModelConstants.ModelConstants.RaitingConstants;
+
+@model AvalibleRaitingViewModel;
+
+
+<div class="row">
+    <form method="post">
+        <div class="form-group">
+            <label asp-for="Raiting">District name</label>
+            <input asp-for="Raiting" class="form-control" placeholder="From 1 to 10 please">
+            <span asp-validation-for="Raiting" class="small text-danger"></span>
+        </div>
+
+        <input class="btn btn-primary mt-3" type="submit" value="Give" />
+    </form>
+</div>

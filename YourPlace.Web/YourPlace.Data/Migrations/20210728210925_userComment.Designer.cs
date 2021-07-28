@@ -10,8 +10,8 @@ using YourPlace.Data.Data;
 namespace YourPlace.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210726203508_addUserBookedHour")]
-    partial class addUserBookedHour
+    [Migration("20210728210925_userComment")]
+    partial class userComment
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -180,6 +180,7 @@ namespace YourPlace.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -205,9 +206,15 @@ namespace YourPlace.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("StoreId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Comments");
                 });
@@ -468,11 +475,15 @@ namespace YourPlace.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("YourPlace.Models.Models.User", null)
-                        .WithMany("bookedHours")
-                        .HasForeignKey("UserId");
+                    b.HasOne("YourPlace.Models.Models.User", "User")
+                        .WithMany("BookedHours")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("StoreService");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("YourPlace.Models.Models.Comment", b =>
@@ -483,7 +494,15 @@ namespace YourPlace.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("YourPlace.Models.Models.User", "User")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Store");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("YourPlace.Models.Models.District", b =>
@@ -564,7 +583,9 @@ namespace YourPlace.Data.Migrations
 
             modelBuilder.Entity("YourPlace.Models.Models.User", b =>
                 {
-                    b.Navigation("bookedHours");
+                    b.Navigation("BookedHours");
+
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

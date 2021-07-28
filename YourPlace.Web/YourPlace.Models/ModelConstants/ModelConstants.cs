@@ -23,6 +23,7 @@ namespace YourPlace.Models.ModelConstants
         
         public static class CommentConstants
         {
+            public const int CommentDescriptionMinLenght = 5;
             public const int CommentDescriptionMaxLenght = 250;
         }
 

@@ -34,6 +34,6 @@ namespace YourPlace.Web.Models.Store
         [Required]
         public string District { get; set; }
 
-        public int? Raiting { get; set; }
+        public double? Raiting { get; set; }
     }
 }

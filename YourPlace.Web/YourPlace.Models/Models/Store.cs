@@ -44,7 +44,7 @@ namespace YourPlace.Models.Models
 
         public ICollection<StoreServices> StoreServices { get; set; } = new List<StoreServices>();
         public ICollection<Comment> Comments { get; set; } = new List<Comment>();
-        public ICollection<Raiting> Raitings { get; set; } = new List<Raiting>(); 
+        public ICollection<Rating> Raitings { get; set; } = new List<Rating>(); 
 
 
     }

@@ -17,18 +17,27 @@ namespace YourPlace.Data.Data
         public DbSet<BookedHour> BookedHours { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<District> Districts { get; set; }
-        public DbSet<Raiting> Raitings { get; set; }
+        public DbSet<Rating> Raitings { get; set; }
         public DbSet<Store> Stores { get; set; }
         public DbSet<StoreServices> StoreServices { get; set; }
         public DbSet<Town> Towns { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<User>(user =>
+
+            builder.Entity<Comment>(comment =>
             {
-                user.HasMany<BookedHour>(u => u.bookedHours)
-                .WithOne(b => b.User)
-                .HasForeignKey(u => u.UserId)
+                comment.HasOne(c => c.User)
+                .WithMany(u => u.Comments)
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            builder.Entity<BookedHour>(bookedHours =>
+            {
+                bookedHours.HasOne(b => b.User)
+                .WithMany(u => u.BookedHours)
+                .HasForeignKey(c => c.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
             });
 

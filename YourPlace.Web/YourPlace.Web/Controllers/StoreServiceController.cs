@@ -183,7 +183,7 @@ namespace YourPlace.Web.Controllers
 
             var user = this.GetCurrentUser();
 
-            user.bookedHours.Add(hourToBook);
+            user.BookedHours.Add(hourToBook);
 
             this.data.SaveChanges();
 

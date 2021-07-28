@@ -183,7 +183,7 @@ namespace YourPlace.Web.Controllers
                     CloseHour = s.CloseHour,
                     Town = s.Town.Name,
                     District = s.District.Name,
-                    Raiting = s.Raitings.Select(r => r.StoreRaiting).Sum()
+                    Raiting = s.Raitings.Select(r => r.StoreRaiting).Average()
                 })
                 .ToList();
 
@@ -205,7 +205,7 @@ namespace YourPlace.Web.Controllers
                     CloseHour = s.CloseHour,
                     Town = s.Town.Name,
                     District = s.District.Name,
-                    Raiting = s.Raitings.Select(r => r.StoreRaiting).Sum()
+                    Raiting = s.Raitings.Select(r => r.StoreRaiting).Average()
                 })
                 .FirstOrDefault();
 
