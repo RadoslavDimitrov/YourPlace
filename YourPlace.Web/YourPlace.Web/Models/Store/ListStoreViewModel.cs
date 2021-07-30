@@ -37,5 +37,6 @@ namespace YourPlace.Web.Models.Store
         public double? Raiting { get; set; }
 
         public ICollection<StoreServices> StoreServices { get; set; } = new List<StoreServices>();
+        public ICollection<YourPlace.Models.Models.Comment> Comments { get; set; } = new List<YourPlace.Models.Models.Comment>();
     }
 }

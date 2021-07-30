@@ -8,8 +8,8 @@ namespace YourPlace.Web.Services.Raiting
 {
     public interface IRatingService
     {
-        void Rate(int rate, string storeId);
-        Store Store(string storeId);
+        void Rate(int rate, string storeId, string userId);
+        YourPlace.Models.Models.Store Store(string storeId);
 
         bool IsUserRate(string userId ,string storeId);
     }

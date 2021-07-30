@@ -1,11 +1,93 @@
-﻿@model List<StoreViewModel>;
+﻿@using YourPlace.Web.Services.Store.Models;
+@model AllStoresQueryModel;
 
 @{
     ViewBag.Title = "Shops";
 }
 
+<form method="get">
+    <div class="row">
+        <div class="form-group col-md-4">
+            <label asp-for="SearchTerm"></label>
+            <input asp-for="SearchTerm" class="form-control" placeholder="Beauty and Spa">
+        </div>
+
+        <div class="form-group col-md-4">
+            <div class="form-group">
+                <label asp-for="TownName"></label>
+                <select asp-for="TownName" class="form-control">
+                    <option value="">All</option>
+
+                    @foreach (var town in Model.Towns)
+                    {
+                        <option value="@town">@town</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group col-md-4">
+            <div class="form-group">
+                <label asp-for="DistrictName"></label>
+                <select asp-for="DistrictName" class="form-control">
+                    <option value="">All</option>
+
+                    @foreach (var district in Model.Districts)
+                    {
+                        <option value="@district">@district</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+</form>
+
+@{
+    var previousPage = Model.CurrentPage - 1;
+    if (previousPage < 1)
+    {
+        previousPage = 1;
+    }
+
+    var maxPage = Math.Ceiling((double)Model.TotalStores / AllStoresQueryModel.StoresPerPage);
+}
+
+<div class="row mb-5">
+    <div class="col-md-6">
+        <a class="btn btn-primary @(Model.CurrentPage == 1 ? "disabled" : string.Empty)"
+           asp-controller="Cars"
+           asp-action="All"
+           asp-route-currentPage="@previousPage"
+           asp-route-townName="@Model.TownName"
+           asp-route-districtName="@Model.DistrictName"
+           asp-route-searchTerm="@Model.SearchTerm"><<</a>
+    </div>
+
+    @{
+        var shouldButtonBeDisabled = Model.CurrentPage == maxPage ||
+                                     !Model.Stores.Any();
+    }
+
+    <div class="col-md-6">
+        <a class="btn btn-primary float-sm-right @(shouldButtonBeDisabled ? "disabled" : string.Empty)" style="margin-top: 10px"
+           asp-controller="Cars"
+           asp-action="All"
+           asp-route-currentPage="@(Model.CurrentPage + 1)"
+           asp-route-townName="@Model.TownName"
+           asp-route-districtName="@Model.DistrictName"
+           asp-route-searchTerm="@Model.SearchTerm">>></a>
+    </div>
+</div>
+
+
+@if (!Model.Stores.Any())
+{
+    <h2 class="text-center">No stores found by the given criteria!</h2>
+}
+
+
 <div class="row">
-    @foreach (var store in @Model)
+    @foreach (var store in @Model.Stores)
     {
         <div class="col-md-4">
             <div class="card" style="width: 18rem;">
@@ -18,6 +100,7 @@
                     <li class="list-group-item">Open's at @store.OpenHour</li>
                     <li class="list-group-item">Close in @store.CloseHour</li>
                     <li class="list-group-item">@store.Town</li>
+                    <li class="list-group-item">@store.District</li>
                     <li class="list-group-item">@store.Description</li>
                     <li class="list-group-item">@store.Raiting</li>
                 </ul>

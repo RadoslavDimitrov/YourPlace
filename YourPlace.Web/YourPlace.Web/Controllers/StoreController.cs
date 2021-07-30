@@ -12,6 +12,8 @@ using YourPlace.Models.Models;
 using YourPlace.Web.Infrastructure;
 using YourPlace.Web.Models.Store;
 using YourPlace.Web.Models.StoreService;
+using YourPlace.Web.Services.Store;
+using YourPlace.Web.Services.Store.Models;
 
 namespace YourPlace.Web.Controllers
 {
@@ -20,11 +22,13 @@ namespace YourPlace.Web.Controllers
     {
         private readonly ApplicationDbContext data;
         private readonly UserManager<User> userManager;
+        private readonly IStoreService storeService;
 
-        public StoreController(ApplicationDbContext data, UserManager<User> userManager)
+        public StoreController(ApplicationDbContext data, UserManager<User> userManager, IStoreService storeService)
         {
             this.data = data;
             this.userManager = userManager;
+            this.storeService = storeService;
         }
 
 
@@ -169,25 +173,54 @@ namespace YourPlace.Web.Controllers
             return View(store);
         }
 
-        public IActionResult All()
+        public IActionResult All([FromQuery] AllStoresQueryModel query)
         {
-            List<StoreViewModel> stores = this.data.Stores
-                .Select(s => new StoreViewModel
-                {
-                    Id = s.Id,
-                    Name = s.Name,
-                    Type = s.Type,
-                    Description = s.Description,
-                    PictureUrl = s.PictureUrl,
-                    OpenHour = s.OpenHour,
-                    CloseHour = s.CloseHour,
-                    Town = s.Town.Name,
-                    District = s.District.Name,
-                    Raiting = s.Raitings.Select(r => r.StoreRaiting).Average()
-                })
-                .ToList();
+            var queryResult = this.storeService.All(
+                query.SearchTerm,
+                query.TownName,
+                query.DistrictName,
+                query.CurrentPage,
+                AllStoresQueryModel.StoresPerPage);
 
-            return this.View(stores);
+            var townNames = this.storeService.AllTownName();
+            var districtNames = this.storeService.AllDistrictName();
+
+            query.Towns = townNames;
+            query.Districts = districtNames;
+            query.TotalStores = queryResult.TotalStores;
+            query.Stores = queryResult.Stores;
+
+            return this.View(query);
+
+
+
+            //AllStoreViewModel stores = new AllStoreViewModel()
+            //{
+            //    SearchTerm = searchTerm,
+            //    Town = town,
+            //    District = district,
+            //    Stores = this.data.Stores
+            //    .Where(s => s.Name.Contains(searchTerm) || s.Town.Name == town || s.District.Name == district)
+            //    .Select(s => new StoreViewModel()
+            //    {
+            //        Id = s.Id,
+            //        Name = s.Name,
+            //        Type = s.Type,
+            //        Description = s.Description,
+            //        PictureUrl = s.PictureUrl,
+            //        OpenHour = s.OpenHour,
+            //        CloseHour = s.CloseHour,
+            //        Town = s.Town.Name,
+            //        District = s.District.Name,
+            //        Raiting = s.Raitings.Select(r => r.StoreRaiting).Average()
+            //    })
+            //    .ToList()
+            //};
+
+            //stores.TownNames = stores.Stores.Select(s => s.Town).ToList();
+            //stores.DistrictNames = stores.Stores.Select(d => d.District).ToList();
+
+            //return this.View(stores);
         }
 
         public IActionResult Visit(string storeId)
@@ -219,6 +252,13 @@ namespace YourPlace.Web.Controllers
             foreach (var storeService in storeServices)
             {
                 store.StoreServices.Add(storeService);
+            }
+
+            var storeComments = this.data.Comments.Where(c => c.StoreId == store.Id).ToList();
+
+            foreach (var storeComment in storeComments)
+            {
+                store.Comments.Add(storeComment);
             }
 
             return this.View(store);

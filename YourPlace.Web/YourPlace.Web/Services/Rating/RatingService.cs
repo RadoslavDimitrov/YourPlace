@@ -20,13 +20,13 @@ namespace YourPlace.Web.Services.Raiting
             //TODO CHeck logic
             if(this.data.Raitings.Any(r => r.StoreId == storeId && r.UserId == userId))
             {
-                return false;
+                return true;
             }
 
-            return true;
+            return false;
         }
 
-        public void Rate(int rate, string storeId)
+        public void Rate(int rate, string storeId, string userId)
         {
             var store = this.Store(storeId);
 
@@ -34,15 +34,17 @@ namespace YourPlace.Web.Services.Raiting
             {
                 Id = Guid.NewGuid().ToString(),
                 StoreId = store.Id,
-                StoreRaiting = rate
+                StoreRaiting = rate,
+                UserId = userId
             });
 
             this.data.SaveChanges();
         }
 
-        public Store Store(string storeId)
+        public YourPlace.Models.Models.Store Store(string storeId)
         {
             return this.data.Stores.Where(s => s.Id == storeId).FirstOrDefault();
         }
+
     }
 }

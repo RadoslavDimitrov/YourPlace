@@ -20,7 +20,7 @@ namespace YourPlace.Web.Controllers
 
             if (isUserRate)
             {
-                return this.RedirectToAction("Visit", "Store", storeId);
+                return this.View("UserAlreadyRate", storeId);
             }
 
             return View();
@@ -29,8 +29,9 @@ namespace YourPlace.Web.Controllers
         public IActionResult Give(AvalibleRaitingViewModel rating, string storeId)
         {
             var store = this.ratingService.Store(storeId);
+            var userId = this.User.GetId();
 
-            this.ratingService.Rate(rating.Raiting, storeId);
+            this.ratingService.Rate(rating.Raiting, storeId, userId);
 
             return RedirectToAction("Visit", "Store", storeId);
         }
