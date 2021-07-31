@@ -13,6 +13,8 @@ namespace YourPlace.Web.Models.StoreService
         [Required]
         public string StoreServiceName { get; set; }
         public decimal Price { get; set; }
+
+        public string StoreId { get; set; }
         public List<int> FreeHours { get; set; }
     }
 }

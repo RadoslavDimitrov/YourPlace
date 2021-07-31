@@ -158,13 +158,14 @@ namespace YourPlace.Web.Controllers
                 Price = storeService.Price,
                 StoreServiceName = storeService.Name,
                 FreeHours = freeHours,
-                StoreServiceId = storeService.Id
+                StoreServiceId = storeService.Id,
+                StoreId = store.Id
             };
 
             return this.View(model);
         }
 
-        public IActionResult CreateAnHour(int hour, string storeName, string storeServiceName, string storeServiceId)
+        public IActionResult CreateAnHour(int hour, string storeName, string storeServiceName, string storeServiceId, string storeId)
         {
             var hourToBook = new BookedHour
             {
@@ -172,7 +173,8 @@ namespace YourPlace.Web.Controllers
                 StartFrom = hour,
                 StoreName = storeName,
                 StoreServiceName = storeServiceName,
-                StoreServiceId = storeServiceId
+                StoreServiceId = storeServiceId,
+                StoreId = storeId
             };
 
             var storeService = this.data.StoreServices

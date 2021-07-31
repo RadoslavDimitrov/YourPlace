@@ -138,9 +138,7 @@ namespace YourPlace.Web.Controllers
 
         public IActionResult MyStore(ListStoreViewModel model)
         {
-            var user = GetCurrentUser();
-
-            var userStoreId = user.StoreId;
+            var userStoreId = GetCurrentUserStoreId();
 
             var store = this.data.Stores
                 .Where(s => s.Id == userStoreId)
@@ -191,36 +189,6 @@ namespace YourPlace.Web.Controllers
             query.Stores = queryResult.Stores;
 
             return this.View(query);
-
-
-
-            //AllStoreViewModel stores = new AllStoreViewModel()
-            //{
-            //    SearchTerm = searchTerm,
-            //    Town = town,
-            //    District = district,
-            //    Stores = this.data.Stores
-            //    .Where(s => s.Name.Contains(searchTerm) || s.Town.Name == town || s.District.Name == district)
-            //    .Select(s => new StoreViewModel()
-            //    {
-            //        Id = s.Id,
-            //        Name = s.Name,
-            //        Type = s.Type,
-            //        Description = s.Description,
-            //        PictureUrl = s.PictureUrl,
-            //        OpenHour = s.OpenHour,
-            //        CloseHour = s.CloseHour,
-            //        Town = s.Town.Name,
-            //        District = s.District.Name,
-            //        Raiting = s.Raitings.Select(r => r.StoreRaiting).Average()
-            //    })
-            //    .ToList()
-            //};
-
-            //stores.TownNames = stores.Stores.Select(s => s.Town).ToList();
-            //stores.DistrictNames = stores.Stores.Select(d => d.District).ToList();
-
-            //return this.View(stores);
         }
 
         public IActionResult Visit(string storeId)
@@ -264,7 +232,28 @@ namespace YourPlace.Web.Controllers
             return this.View(store);
         }
 
+        public IActionResult MyStoreBookedHours()
+        {
+            var userStoreId = GetCurrentUserStoreId();
+
+            var bookedHours = this.data.BookedHours
+                .Where(b => b.StoreId == userStoreId && b.UserId == this.User.GetId())
+                .Select(b => new ListStoreBookedHoursViewModel() 
+                {
+                    //TODO logic
+                })
+                .ToList();
+
+            return this.View(bookedHours);
+        }
+
         //TODO place it in UserService
+        private string GetCurrentUserStoreId()
+        {
+            var user = this.GetCurrentUser();
+
+            return user.StoreId;
+        }
         private User GetCurrentUser()
         {
             var userId = this.User.GetId();

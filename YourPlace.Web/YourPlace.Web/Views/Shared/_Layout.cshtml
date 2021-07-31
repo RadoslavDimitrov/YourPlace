@@ -11,10 +11,33 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-controller="Store" asp-action="MyStore">My store</a>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            My place
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li>
+                                <a class="dropdown-item navbar-brand text-sm-center" asp-controller="Store" asp-action="MyStore">Store</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item navbar-brand" asp-controller="Store" asp-action="MyStoreBookedHours">Booked</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item navbar-brand " asp-controller="Comment" asp-action="Mine">Comments</a>
+                            </li>
+                            <li>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item navbar-brand" asp-controller="User" asp-action="MyBookedHours">My hours</a>
+                            </li>
+                        </ul>
+                    </div>
+                }
+
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <partial name="_LoginPartial" />
-                    
+
                 </div>
             </div>
         </nav>

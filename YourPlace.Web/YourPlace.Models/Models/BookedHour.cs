@@ -28,6 +28,8 @@ namespace YourPlace.Models.Models
         public string StoreName { get; set; }
         public DateTime Date { get; set; }
 
+        public string StoreId { get; set; }
+
         public string UserId { get; set; }
         [Required]
         public User User { get; set; }
