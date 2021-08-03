@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -16,5 +17,7 @@ namespace YourPlace.Web.Models.StoreService
 
         public string StoreId { get; set; }
         public List<int> FreeHours { get; set; }
+
+        public DateTime CurrDate { get; set; }
     }
 }

@@ -10,19 +10,54 @@
     <div class="mb-5">
         @Model.Price
     </div>
+</div>
+
+@{
+    var previousPage = Model.CurrDate.Subtract(TimeSpan.FromDays(1));
+    if (previousPage < DateTime.Now)
+    {
+        previousPage = DateTime.Now;
+    }
+}
+
+<h2 class="text-center">Today</h2>
+<div class="text-center">@DateTime.UtcNow.Day / @DateTime.UtcNow.Month</div>
+
+<div class="row mb-5">
+    <div class="col-md-6">
+        <a class="btn btn-primary @(Model.CurrDate == DateTime.Now ? "disabled" : string.Empty)"
+           asp-controller="StoreService"
+           asp-action="BookAnHour"
+           asp-route-storeServiceId="@Model.StoreServiceId"
+           asp-route-date="@previousPage.ToString("MM/dd/yyyy")">@Model.CurrDate.Subtract(TimeSpan.FromDays(1)).DayOfWeek / @Model.CurrDate.Subtract(TimeSpan.FromDays(1)).Day / @Model.CurrDate.Subtract(TimeSpan.FromDays(1)).Month</a>
+    </div>
+
+    <div class="col-md-6">
+        <a class="btn btn-primary float-sm-right" style="margin-top: 10px"
+           asp-controller="StoreService"
+           asp-action="BookAnHour"
+           asp-route-storeServiceId="@Model.StoreServiceId"
+           asp-route-date="@Model.CurrDate.AddDays(1).ToString("MM/dd/yyyy")">@Model.CurrDate.AddDays(1).DayOfWeek / @Model.CurrDate.AddDays(1).Day / @Model.CurrDate.AddDays(1).Month</a>
+    </div>
+</div>
+
+<div class="col-mb-4">
+    <h2 class="text-center mb-3">Free hours for @Model.CurrDate.Day / @Model.CurrDate.Month</h2>
     <div class="row">
+
         @foreach (var freeHour in Model.FreeHours)
         {
-        <div class="col-md-2 mb-3">
-            <a asp-controller="StoreService" 
-               asp-action="CreateAnHour" 
-               asp-route-hour="@freeHour" 
-               asp-route-storeName="@Model.ShopName" 
-               asp-route-storeServiceName="@Model.StoreServiceName"
-               asp-route-storeServiceId="@Model.StoreServiceId"
-               asp-route-storeId="@Model.StoreId"
-               class="btn btn-primary">@freeHour</a>
-        </div>
+            <div class="col-md-2 mb-3">
+                <a asp-controller="StoreService"
+                   asp-action="CreateAnHour"
+                   asp-route-hour="@freeHour"
+                   asp-route-storeName="@Model.ShopName"
+                   asp-route-storeServiceName="@Model.StoreServiceName"
+                   asp-route-storeServiceId="@Model.StoreServiceId"
+                   asp-route-storeId="@Model.StoreId"
+                   asp-route-date="@Model.CurrDate.ToString("MM/dd/yyyy")"
+                   class="btn btn-primary">@freeHour</a>
+            </div>
         }
     </div>
 </div>

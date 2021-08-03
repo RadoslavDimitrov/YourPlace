@@ -7,11 +7,14 @@ using YourPlace.Web.Models.StoreService;
 using YourPlace.Models.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace YourPlace.Web.Controllers
 {
     public class StoreServiceController : Controller
     {
+        private string today = DateTime.UtcNow.ToString("MM/dd/yyyy");
+
         private readonly ApplicationDbContext data;
 
         public StoreServiceController(ApplicationDbContext data)
@@ -127,14 +130,29 @@ namespace YourPlace.Web.Controllers
             return this.RedirectToAction("MyStore", "Store");
         }
 
-        public IActionResult BookAnHour(string storeServiceId)
+        public IActionResult BookAnHour(string storeServiceId, string date)
         {
+            DateTime currDate;
+
+            if(date == null)
+            {
+                currDate = DateTime.UtcNow;
+            }
+            else
+            {
+                if (!DateTime.TryParseExact(date, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out currDate))
+                {
+                    return this.View();
+                }
+            }
+            
+
             var storeService = this.data.StoreServices
                 .Where(st => st.Id == storeServiceId)
                 .FirstOrDefault();
 
             var bookedHours = this.data.BookedHours
-                .Where(bh => bh.StoreServiceId == storeServiceId)
+                .Where(bh => bh.StoreServiceId == storeServiceId && bh.Date == currDate)
                 .Select(b => b.StartFrom).ToList();
 
             var store = this.data.Stores.Where(s => s.Id == storeService.StoreId).FirstOrDefault();
@@ -154,19 +172,28 @@ namespace YourPlace.Web.Controllers
 
             var model = new BookAnHourViewModel
             {
-                ShopName = storeService.Store.Name,
+                ShopName = store.Name,
                 Price = storeService.Price,
                 StoreServiceName = storeService.Name,
                 FreeHours = freeHours,
                 StoreServiceId = storeService.Id,
-                StoreId = store.Id
+                StoreId = store.Id,
+                CurrDate = currDate
             };
 
             return this.View(model);
         }
 
-        public IActionResult CreateAnHour(int hour, string storeName, string storeServiceName, string storeServiceId, string storeId)
+        public IActionResult CreateAnHour(int hour, string storeName, string storeServiceName, string storeServiceId, string storeId, string date)
         {
+            DateTime currDate;
+
+            if (!DateTime.TryParseExact(date, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out currDate))
+            {
+                return this.RedirectToAction("BookAnHour");
+            }
+
+
             var hourToBook = new BookedHour
             {
                 Id = Guid.NewGuid().ToString(),
@@ -174,7 +201,8 @@ namespace YourPlace.Web.Controllers
                 StoreName = storeName,
                 StoreServiceName = storeServiceName,
                 StoreServiceId = storeServiceId,
-                StoreId = storeId
+                StoreId = storeId,
+                Date = currDate
             };
 
             var storeService = this.data.StoreServices

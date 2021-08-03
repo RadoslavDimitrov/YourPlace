@@ -1,0 +1,14 @@
+﻿@model ProfileUserViewModel;
+
+@{
+    ViewBag.Title = "User profile";
+}
+
+<div class="col-md-12">
+    <h2 class="text-center mb-3">Username = @Model.UserName</h2>
+    <h2 class="text-center mb-3">Email = @Model.Email</h2>
+</div>
+
+<div class="text-center">
+    <a asp-controller="User" asp-action="ChangePassword">Change your password</a>
+</div>

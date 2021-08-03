@@ -42,5 +42,11 @@ namespace YourPlace.Models.ModelConstants
         {
             public const int TownNameMaxLenght = 25;
         }
+
+        public static class UserConstants
+        {
+            public const int PasswordMinLenght = 6;
+            public const int PasswordMaxLenght = 100;
+        }
     }
 }

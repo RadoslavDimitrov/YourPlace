@@ -1,5 +1,15 @@
 ﻿@model List<UserBookHourViewModel>;
 
+@{
+    ViewBag.Title = "User booked hours";
+}
+
+@if (!Model.Any())
+{
+    <h3>You have no booked hours!</h3>
+}
+else 
+{
 <div>
     @foreach (var hour in Model)
     {
@@ -14,4 +24,7 @@
         </div>
     }
 </div>
+}
+
+
 
