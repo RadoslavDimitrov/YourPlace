@@ -13,7 +13,7 @@
     <h2>@Model.CloseHour - Close at</h2>
     <h2>@Model.Town - At city</h2>
     <h2>@Model.District</h2>
-    <h2>@Model.Raiting</h2>
+    <h2>@(Model.Raiting != null ? Model.Raiting : "No rating")</h2>
 
     <h1 class="text-center mt-3">
         Services

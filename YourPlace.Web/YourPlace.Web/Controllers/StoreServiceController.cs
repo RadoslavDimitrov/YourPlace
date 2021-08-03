@@ -87,7 +87,7 @@ namespace YourPlace.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(DetailsStoreServiceViewModel model ,string storeServiceId)
+        public IActionResult Edit(EditStoreServiceViewModel model ,string storeServiceId)
         {
             if (!ModelState.IsValid)
             {

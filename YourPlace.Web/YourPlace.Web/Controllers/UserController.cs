@@ -121,7 +121,8 @@ namespace YourPlace.Web.Controllers
                     StartFrom = b.StartFrom,
                     StoreName = b.StoreName,
                     StoreServiceId = b.StoreServiceId,
-                    StoreServiceName = b.StoreServiceName
+                    StoreServiceName = b.StoreServiceName,
+                    Date = b.Date
                 })
                 .ToList();
                

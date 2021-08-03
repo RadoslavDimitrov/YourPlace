@@ -153,7 +153,7 @@ namespace YourPlace.Web.Controllers
                     PictureUrl = s.PictureUrl,
                     Town = s.Town.Name,
                     Id = s.Id,
-                    Raiting = s.Raitings.Select(r => r.StoreRaiting).Sum()
+                    Raiting = s.Raitings.Select(r => r.StoreRaiting).Average()
                 })
                 .FirstOrDefault();
 
