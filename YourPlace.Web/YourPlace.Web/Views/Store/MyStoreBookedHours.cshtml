@@ -1,0 +1,29 @@
+﻿@model List<ListStoreBookedHoursViewModel>;
+
+@{
+    ViewBag.Title = "Store booked hours";
+}
+
+@if (!Model.Any())
+{
+    <h2>No booked hours!</h2>
+}
+else
+{
+    <div class="row">
+        <div class="col-12">
+            <h3 class="mb-3">Booked hours for store @Model[0].StoreName</h3>
+            @foreach (var bookedHour in Model)
+            {
+                <div class="mb-3">Booked hour</div>
+                <div>
+                    @bookedHour.Username has booked hour for @bookedHour.StoreServiceName
+                    at @bookedHour.Date in @bookedHour.StartFrom
+                </div>
+            }
+        </div>
+    </div>
+}
+
+
+

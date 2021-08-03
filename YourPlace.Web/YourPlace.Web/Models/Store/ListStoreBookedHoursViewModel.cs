@@ -7,6 +7,21 @@ namespace YourPlace.Web.Models.Store
 {
     public class ListStoreBookedHoursViewModel
     {
-        //TODO
+        public string Id { get; set; }
+        public string UserId { get; set; }
+
+        public string StoreId { get; set; }
+
+        public string StoreName { get; set; }
+
+        public string StoreServiceName { get; set; }
+
+        public string StoreServiceId { get; set; }
+
+        public int StartFrom { get; set; }
+
+        public DateTime Date { get; set; }
+
+        public string Username { get; set; }
     }
 }

@@ -237,10 +237,18 @@ namespace YourPlace.Web.Controllers
             var userStoreId = GetCurrentUserStoreId();
 
             var bookedHours = this.data.BookedHours
-                .Where(b => b.StoreId == userStoreId && b.UserId == this.User.GetId())
+                .Where(b => b.StoreId == userStoreId)
                 .Select(b => new ListStoreBookedHoursViewModel() 
                 {
-                    //TODO logic
+                    Id = b.Id,
+                    Date = b.Date,
+                    StartFrom = b.StartFrom,
+                    StoreId = b.StoreId,
+                    StoreName = b.StoreName,
+                    StoreServiceId = b.StoreServiceId,
+                    StoreServiceName = b.StoreServiceName,
+                    UserId = b.UserId,
+                    Username = b.User.UserName
                 })
                 .ToList();
 
