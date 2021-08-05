@@ -31,7 +31,7 @@ namespace YourPlace.Models.Models
         public string StoreId { get; set; }
 
         public string UserId { get; set; }
-        [Required]
+
         public User User { get; set; }
 
     }

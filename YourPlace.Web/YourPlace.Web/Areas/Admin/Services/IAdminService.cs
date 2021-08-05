@@ -8,6 +8,12 @@ namespace YourPlace.Web.Areas.Admin.Services
 {
     public interface IAdminService
     {
-        Task<List<UserServiceModel>> AllUsers();
+        List<UserServiceModel> AllUsers();
+
+        DeleteUserServiceModel DeleteUser(string userId);
+
+        bool ChangeRole(string userId, string rolename);
+
+        List<string> GetAllRoles();
     }
 }

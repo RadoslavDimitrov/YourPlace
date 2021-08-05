@@ -1,3 +1,26 @@
-﻿
+﻿@model List<UserServiceModel>;
 
-<h1>hello from admin</h1>
+@{
+    ViewBag.Title = "All users";
+}
+
+<div class="row">
+    <div>
+        @foreach (var user in Model)
+        {
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">@user.Username</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">@user.Email</h6>
+                    @if (user.Rolename.Any())
+                    {
+                        <h6 class="card-subtitle mb-2 text-muted">Role - @user.Rolename[0]</h6>
+                    }
+                    <a asp-area="Admin" asp-controller="Admin" asp-action="ChangeRole" asp-route-userId="@user.Id" class="card-link">Change user role</a>
+                    <a asp-area="Admin" asp-controller="Admin" asp-action="DeleteUser" asp-route-userId="@user.Id" class="card-link">Delete</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

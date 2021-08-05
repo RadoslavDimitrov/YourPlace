@@ -1,0 +1,9 @@
+﻿@model DeleteUserServiceModel;
+
+@{
+    ViewBag.Title = "Delete User";
+}
+
+<h1 class="mb-5">You successfully deleted User with ID : @Model.Id</h1>
+
+<a asp-area="Admin" asp-controller="Admin" asp-action="AllUsers">Return to all users</a>
