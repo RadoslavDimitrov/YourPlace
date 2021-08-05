@@ -34,6 +34,12 @@
                             <li>
                                 <a class="dropdown-item navbar-brand " asp-controller="User" asp-action="Profile">Profile</a>
                             </li>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li>
+                                    <a class="dropdown-item navbar-brand " asp-area="Admin" asp-controller="Admin" asp-action="AllUsers">Users</a>
+                                </li>
+                            }
                         </ul>
                     </div>
                 }
