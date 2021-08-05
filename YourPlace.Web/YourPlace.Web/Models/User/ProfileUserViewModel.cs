@@ -11,5 +11,6 @@ namespace YourPlace.Web.Models.User
 
         public string Email { get; set; }
 
+        public string RoleName { get; set; }
     }
 }

@@ -10,19 +10,26 @@ using YourPlace.Models.Models;
 using YourPlace.Web.Infrastructure;
 using YourPlace.Web.Models.User;
 
+using static YourPlace.Web.Infrastructure.RoleConstants;
+
 namespace YourPlace.Web.Controllers
 {
     public class UserController : Controller
     {
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
+        private readonly RoleManager<IdentityRole> roleManager;
         private readonly ApplicationDbContext data;
 
-        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, ApplicationDbContext data)
+        public UserController(UserManager<User> userManager,
+            SignInManager<User> signInManager, 
+            ApplicationDbContext data, 
+            RoleManager<IdentityRole> roleManager)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.data = data;
+            this.roleManager = roleManager;
         }
 
         public IActionResult Register()
@@ -57,6 +64,19 @@ namespace YourPlace.Web.Controllers
 
                 return this.View(model);
             }
+
+            if(await roleManager.RoleExistsAsync(UserRoleName))
+            {
+                await userManager.AddToRoleAsync(user, UserRoleName);
+            }
+            else
+            {
+                var role = new IdentityRole { Name = UserRoleName };
+
+                await roleManager.CreateAsync(role);
+                await userManager.AddToRoleAsync(user, UserRoleName);
+            };
+            
 
             return RedirectToAction("Index", "Home");
         }
@@ -137,7 +157,8 @@ namespace YourPlace.Web.Controllers
                 .Select(u => new ProfileUserViewModel()
                 {
                     UserName = u.UserName,
-                    Email = u.Email
+                    Email = u.Email,
+                    RoleName = this.User.GetRole()
                 })
                 .FirstOrDefault();
 

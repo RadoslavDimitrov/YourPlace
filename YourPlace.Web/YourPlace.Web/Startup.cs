@@ -15,6 +15,7 @@ using YourPlace.Web.Infrastructure;
 using YourPlace.Models.Models;
 using YourPlace.Web.Services.Raiting;
 using YourPlace.Web.Services.Store;
+using YourPlace.Web.Areas.Admin.Services;
 
 namespace YourPlace.Web
 {
@@ -48,6 +49,7 @@ namespace YourPlace.Web
 
             services.AddTransient<IRatingService, RatingService>();
             services.AddTransient<IStoreService, StoreService>();
+            services.AddTransient<IAdminService, AdminService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -75,6 +77,10 @@ namespace YourPlace.Web
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    name: "Areas",
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
