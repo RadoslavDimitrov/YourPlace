@@ -53,6 +53,11 @@ namespace YourPlace.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ChangeRole(ChangeUserRoleViewModel model ,string userId)
         {
+            if (!ModelState.IsValid)
+            {
+                return this.View(new ChangeUserRoleViewModel { AllRoles = this.adminService.GetAllRoles() });
+            }
+
             var result = this.adminService.ChangeRole(userId, model.Rolename);
 
             if (!result)

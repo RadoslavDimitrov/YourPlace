@@ -16,6 +16,7 @@ using YourPlace.Models.Models;
 using YourPlace.Web.Services.Raiting;
 using YourPlace.Web.Services.Store;
 using YourPlace.Web.Areas.Admin.Services;
+using YourPlace.Web.Services.User;
 
 namespace YourPlace.Web
 {
@@ -50,6 +51,7 @@ namespace YourPlace.Web
             services.AddTransient<IRatingService, RatingService>();
             services.AddTransient<IStoreService, StoreService>();
             services.AddTransient<IAdminService, AdminService>();
+            services.AddTransient<IUserService, UserService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

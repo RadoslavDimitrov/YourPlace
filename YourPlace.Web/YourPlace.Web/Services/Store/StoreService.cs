@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using YourPlace.Data.Data;
+using YourPlace.Models.Models;
 using YourPlace.Web.Models.Store;
 using YourPlace.Web.Services.Store.Models;
 
@@ -104,6 +105,141 @@ namespace YourPlace.Web.Services.Store
         public List<string> AllDistrictName()
         {
             return this.data.Districts.Select(d => d.Name).Distinct().OrderBy(dName => dName).ToList();
+        }
+
+        public Town CreateTown(string name)
+        {
+            Town town;
+
+            if (!this.data.Towns.Any(t => t.Name == name))
+            {
+                town = new Town
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = name
+                };
+            }
+            else
+            {
+                town = this.data.Towns.Where(t => t.Name == name).FirstOrDefault();
+            }
+
+            return town;
+        }
+
+        public District CreateDistrict(string name)
+        {
+            District district;
+
+            if (!this.data.Districts.Any(d => d.Name == name))
+            {
+                district = new District
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = name
+                };
+            }
+            else
+            {
+                district = this.data.Districts.Where(d => d.Name == name).FirstOrDefault();
+            }
+
+            return district;
+        }
+
+        public string CreateStore(string name, 
+            string type, 
+            string description, 
+            int openHour, 
+            int closeHour, 
+            string pictureUrl, 
+            string town, 
+            string district,
+            YourPlace.Models.Models.User user)
+        {
+            var storeTown = this.CreateTown(town);
+            var storeDistrict = this.CreateDistrict(district);
+
+            storeTown.Districts.Add(storeDistrict);
+
+            var store = new YourPlace.Models.Models.Store 
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = name,
+                Type = type,
+                Description = description,
+                OpenHour = openHour,
+                CloseHour = closeHour,
+                PictureUrl = pictureUrl,
+                Town = storeTown,
+                District = storeDistrict,
+            };
+
+            user.Store = store;
+
+            this.data.Stores.Add(store);
+            this.data.SaveChanges();
+
+            return store.Id;
+        }
+
+        public ListStoreViewModel ListStore(string storeId)
+        {
+            var model = this.data.Stores.Where(store => store.Id == storeId)
+                .Select(store => new ListStoreViewModel
+                {
+                    Id = store.Id,
+                    Name = store.Name,
+                    Type = store.Type,
+                    Description = store.Description,
+                    OpenHour = store.OpenHour,
+                    CloseHour = store.CloseHour,
+                    Town = store.Town.Name,
+                    District = store.District.Name,
+                    PictureUrl = store.PictureUrl,
+                    Raiting = store.Raitings.Select(r => r.StoreRaiting).Average()
+                })
+                .FirstOrDefault();
+
+            if (model != null)
+            {
+                var storeServices = this.data.StoreServices.Where(st => st.StoreId == model.Id).ToList();
+
+                foreach (var storeService in storeServices)
+                {
+                    model.StoreServices.Add(storeService);
+                }
+
+                var storeComments = this.data.Comments.Where(c => c.StoreId == model.Id).ToList();
+
+                foreach (var storeComment in storeComments)
+                {
+                    model.Comments.Add(storeComment);
+                }
+            }
+
+            return model;
+        }
+
+        public List<ListStoreBookedHoursViewModel> StoreBookedHours(string storeId)
+        {
+            var bookedHours = this.data.BookedHours
+                .Where(b => b.StoreId == storeId)
+                .Select(b => new ListStoreBookedHoursViewModel()
+                {
+                    Id = b.Id,
+                    Date = b.Date,
+                    StartFrom = b.StartFrom,
+                    StoreId = b.StoreId,
+                    StoreName = b.StoreName,
+                    StoreServiceId = b.StoreServiceId,
+                    StoreServiceName = b.StoreServiceName,
+                    UserId = b.UserId,
+                    Username = b.User.UserName
+                })
+                .ToList();
+
+            return bookedHours;
         }
     }
 }

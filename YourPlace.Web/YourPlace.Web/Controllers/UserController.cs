@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 using YourPlace.Data.Data;
 using YourPlace.Models.Models;
 using YourPlace.Web.Infrastructure;
 using YourPlace.Web.Models.User;
-
+using YourPlace.Web.Services.User;
 using static YourPlace.Web.Infrastructure.RoleConstants;
 
 namespace YourPlace.Web.Controllers
@@ -20,16 +19,19 @@ namespace YourPlace.Web.Controllers
         private readonly SignInManager<User> signInManager;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly ApplicationDbContext data;
+        private readonly IUserService userService;
 
         public UserController(UserManager<User> userManager,
-            SignInManager<User> signInManager, 
-            ApplicationDbContext data, 
-            RoleManager<IdentityRole> roleManager)
+            SignInManager<User> signInManager,
+            ApplicationDbContext data,
+            RoleManager<IdentityRole> roleManager,
+            IUserService userService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.data = data;
             this.roleManager = roleManager;
+            this.userService = userService;
         }
 
         public IActionResult Register()
@@ -131,36 +133,15 @@ namespace YourPlace.Web.Controllers
         {
             var userId = this.User.GetId();
 
-            var user = this.data.Users.Where(u => u.Id == userId).FirstOrDefault();
-
-            var bookHour = this.data.BookedHours
-                .Where(b => b.UserId == userId)
-                .Select(b => new UserBookHourViewModel
-                {
-                    Id = b.Id,
-                    StartFrom = b.StartFrom,
-                    StoreName = b.StoreName,
-                    StoreServiceId = b.StoreServiceId,
-                    StoreServiceName = b.StoreServiceName,
-                    Date = b.Date
-                })
-                .ToList();
+            var bookedHours = this.userService.UserBookedHours(userId);
                
-
-            return this.View(bookHour);
+            return this.View(bookedHours);
         }
 
         [Authorize]
         public IActionResult Profile()
         {
-            var user = this.data.Users.Where(u => u.Id == this.User.GetId())
-                .Select(u => new ProfileUserViewModel()
-                {
-                    UserName = u.UserName,
-                    Email = u.Email,
-                    RoleName = this.User.GetRole()
-                })
-                .FirstOrDefault();
+            var user = this.userService.UserWithRole(this.User.GetId());
 
             if(user == null)
             {
@@ -186,6 +167,7 @@ namespace YourPlace.Web.Controllers
             }
 
             var user = await userManager.GetUserAsync(User);
+
             if (user == null)
             {
                 return this.View("NotFound", ApplicationMessages.Exception.UserDoesNotExist);
