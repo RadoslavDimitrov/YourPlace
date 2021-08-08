@@ -94,11 +94,7 @@ namespace YourPlace.Web.Areas.Admin.Services
             {
                 var bookHours = this.data.BookedHours.Where(b => b.UserId == user.Id).ToList();
 
-                foreach (var hour in bookHours)
-                {
-                    hour.UserId = null;
-                }
-
+                this.data.BookedHours.RemoveRange(bookHours);
                 this.data.Users.Remove(user);
                 this.data.SaveChanges();
 

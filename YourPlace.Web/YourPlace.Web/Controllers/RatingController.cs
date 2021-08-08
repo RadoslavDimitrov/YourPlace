@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
 using YourPlace.Web.Infrastructure;
 using YourPlace.Web.Models.Rate;
 using YourPlace.Web.Services.Raiting;
 
 namespace YourPlace.Web.Controllers
 {
+    [Authorize]
     public class RatingController : Controller
     {
         private readonly IRatingService ratingService;

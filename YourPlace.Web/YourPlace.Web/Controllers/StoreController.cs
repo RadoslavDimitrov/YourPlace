@@ -2,19 +2,16 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Linq;
 
 using YourPlace.Models.Models;
 using YourPlace.Web.Infrastructure;
 using YourPlace.Web.Models.Store;
-using YourPlace.Web.Models.StoreService;
 using YourPlace.Web.Services.Store;
 using YourPlace.Web.Services.Store.Models;
 using YourPlace.Web.Services.User;
 
 namespace YourPlace.Web.Controllers
 {
-    [Authorize]
     public class StoreController : Controller
     {
         private readonly UserManager<User> userManager;
@@ -131,7 +128,5 @@ namespace YourPlace.Web.Controllers
 
             return this.View(bookedHours);
         }
-
-
     }
 }

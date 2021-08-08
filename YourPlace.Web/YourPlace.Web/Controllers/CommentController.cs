@@ -7,6 +7,8 @@ using YourPlace.Data.Data;
 using YourPlace.Models.Models;
 using YourPlace.Web.Infrastructure;
 using YourPlace.Web.Models.Comment;
+using YourPlace.Web.Services.Comment;
+
 using static YourPlace.Web.Infrastructure.ApplicationMessages.Exception;
 
 namespace YourPlace.Web.Controllers
@@ -15,10 +17,13 @@ namespace YourPlace.Web.Controllers
     public class CommentController : Controller
     {
         private readonly ApplicationDbContext data;
+        private readonly ICommentService commentService;
 
-        public CommentController(ApplicationDbContext data)
+        public CommentController(ApplicationDbContext data, 
+            ICommentService commentService)
         {
             this.data = data;
+            this.commentService = commentService;
         }
 
         public IActionResult Create(string storeId)
@@ -41,16 +46,7 @@ namespace YourPlace.Web.Controllers
                 return this.BadRequest();
             }
 
-            var comment = new Comment
-            {
-                Id = Guid.NewGuid().ToString(),
-                Description = model.Description,
-                StoreId = model.StoreId,
-                UserId = userId
-            };
-
-            this.data.Comments.Add(comment);
-            this.data.SaveChanges();
+            var comment = this.commentService.Create(model.Description, storeId, userId);
 
             return RedirectToAction("Visit", "Store", storeId);
         }
@@ -59,16 +55,7 @@ namespace YourPlace.Web.Controllers
         {
             var userId = this.User.GetId();
 
-            var comments = this.data.Comments
-                .Where(c => c.UserId == userId)
-                .Select(c => new MineCommentsViewModel()
-                {
-                    Id = c.Id,
-                    Description = c.Description,
-                    StoreName = c.Store.Name,
-                    StoreId = c.StoreId
-                })
-                .ToList();
+            var comments = this.commentService.CommentsByUser(userId);
 
             return this.View(comments);
         }
@@ -77,23 +64,12 @@ namespace YourPlace.Web.Controllers
         {
             var userId = this.User.GetId();
 
-            var comment = this.data.Comments.Where(c => c.Id == id && c.UserId == userId).FirstOrDefault();
+            var comment = this.commentService.Delete(id, userId);
 
-            if(comment == null)
+            if(!comment)
             {
                 return this.View("NotFound", CommentDoesNotExist);
             }
-
-            var store = this.data.Stores.Where(s => s.Id == comment.StoreId).FirstOrDefault();
-
-            if(store == null)
-            {
-                return this.View("NotFound", StoreDoesNotExist);
-            }
-
-            store.Comments.Remove(comment);
-            this.data.Comments.Remove(comment);
-            this.data.SaveChanges();
 
             return this.RedirectToAction("Mine");
         }

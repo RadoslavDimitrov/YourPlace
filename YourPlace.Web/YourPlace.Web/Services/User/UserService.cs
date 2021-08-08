@@ -34,6 +34,11 @@ namespace YourPlace.Web.Services.User
             return user.StoreId;
         }
 
+        public bool isUserOwner(string userId, string storeId)
+        {
+            return this.data.Users.Any(u => u.Id == userId && u.StoreId == storeId);
+        }
+
         public List<UserBookHourViewModel> UserBookedHours(string userId)
         {
             var bookHour = this.data.BookedHours

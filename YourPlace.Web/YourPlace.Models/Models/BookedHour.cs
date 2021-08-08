@@ -26,6 +26,7 @@ namespace YourPlace.Models.Models
 
         [Required]
         public string StoreName { get; set; }
+
         public DateTime Date { get; set; }
 
         public string StoreId { get; set; }

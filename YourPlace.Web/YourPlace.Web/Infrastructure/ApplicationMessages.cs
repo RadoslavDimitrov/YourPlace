@@ -9,6 +9,7 @@ namespace YourPlace.Web.Infrastructure
             public const string StoreDoesNotExist = "Store does not exist!";
             public const string CommentDoesNotExist = "Comment does not exist!";
             public const string UserDoesNotExist = "Invalid User!";
+            public const string ServiceDoesNotExist = "Service does not exist";
         }
 
         public class Succsesfully

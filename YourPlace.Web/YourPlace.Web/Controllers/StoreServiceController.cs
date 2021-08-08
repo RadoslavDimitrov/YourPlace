@@ -4,22 +4,28 @@ using System.Linq;
 using YourPlace.Web.Infrastructure;
 using YourPlace.Data.Data;
 using YourPlace.Web.Models.StoreService;
-using YourPlace.Models.Models;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
+using Microsoft.AspNetCore.Authorization;
+
+using YourPlace.Models.Models;
+using YourPlace.Web.Services.StoreService;
 
 namespace YourPlace.Web.Controllers
 {
+    [Authorize]
     public class StoreServiceController : Controller
     {
         private string today = DateTime.UtcNow.ToString("MM/dd/yyyy");
 
         private readonly ApplicationDbContext data;
+        private readonly IStoreServiceService storeServiceService;
 
-        public StoreServiceController(ApplicationDbContext data)
+        public StoreServiceController(ApplicationDbContext data, 
+            IStoreServiceService storeServiceService)
         {
             this.data = data;
+            this.storeServiceService = storeServiceService;
         }
 
         public IActionResult Create(string storeId)
@@ -30,32 +36,17 @@ namespace YourPlace.Web.Controllers
         [HttpPost]
         public IActionResult Create(CreateStoreServiceViewModel model, string storeId)
         {
+            var result = this.storeServiceService.Create(model.Name, model.Description, model.Price, storeId, this.User.GetId());
 
-            var store = this.data.Stores.Where(s => s.Id == storeId).FirstOrDefault();
-
-            if(store == null)
+            if (!result)
             {
                 return View("NotFound", ApplicationMessages.Exception.StoreDoesNotExist);
             }
 
-            var storeService = new StoreServices
-            {
-                Id = Guid.NewGuid().ToString(),
-                Name = model.Name,
-                Description = model.Description,
-                Price = model.Price,
-                Store = store
-            };
-
-            store.StoreServices.Add(storeService);
-
-            this.data.StoreServices.Add(storeService);
-            this.data.SaveChanges();
-
             var message = new List<string>
             {
                 ApplicationMessages.Succsesfully.CreateStoreService,
-                nameof(StoreServices)
+                model.Name
             };
 
             return View("SuccessfullyCreate", message);
@@ -63,22 +54,14 @@ namespace YourPlace.Web.Controllers
 
         public IActionResult Details(string storeServiceId)
         {
-            var storeService = this.data.StoreServices.Where(st => st.Id == storeServiceId).FirstOrDefault();
+            var storeService = this.storeServiceService.ServiceById(storeServiceId);
 
             if(storeService == null)
             {
                 return this.View(storeServiceId);
             }
 
-            var dto = new DetailsStoreServiceViewModel()
-            {
-                Id = storeService.Id,
-                Name = storeService.Name,
-                Description = storeService.Description,
-                Price = storeService.Price
-            };
-
-            return this.View(dto);
+            return this.View(storeService);
         }
 
         public IActionResult Edit(string storeServiceId)
@@ -94,128 +77,47 @@ namespace YourPlace.Web.Controllers
                 return this.View(storeServiceId);
             }
 
-            if(!this.data.StoreServices.Any(st => st.Id == storeServiceId))
+            if(!this.storeServiceService.Edit(model.Name, model.Description, model.Price, storeServiceId, this.User.GetId()))
             {
                 return this.View(storeServiceId);
             }
-
-            var storeService = this.data.StoreServices.Where(st => st.Id == storeServiceId).FirstOrDefault();
-
-            storeService.Name = model.Name;
-            storeService.Description = model.Description;
-            storeService.Price = model.Price;
-
-            this.data.SaveChanges();
 
             return this.RedirectToAction("MyStore", "Store");
         }
 
         public IActionResult Delete(string storeServiceId)
         {
-            var storeService = this.data.StoreServices.Where(st => st.Id == storeServiceId).FirstOrDefault();
+            var result = this.storeServiceService.Delete(storeServiceId, this.User.GetId());
 
-            var store = this.data.Stores.Where(s => s.StoreServices.Any(st => st.Id == storeServiceId)).FirstOrDefault();
-
-            if(store == null)
+            if(!result)
             {
-                return View("NotFound", ApplicationMessages.Exception.StoreDoesNotExist);
+                return View("NotFound", ApplicationMessages.Exception.ServiceDoesNotExist);
             }
-
-            store.StoreServices.Remove(storeService);
-
-            this.data.StoreServices.Remove(storeService);
-
-            this.data.SaveChanges();
 
             return this.RedirectToAction("MyStore", "Store");
         }
 
         public IActionResult BookAnHour(string storeServiceId, string date)
         {
-            DateTime currDate;
+            DateTime currDate = this.storeServiceService.ParseDate(date);
 
-            if(date == null)
-            {
-                currDate = DateTime.UtcNow;
-            }
-            else
-            {
-                if (!DateTime.TryParseExact(date, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out currDate))
-                {
-                    return this.View();
-                }
-            }
-            
-
-            var storeService = this.data.StoreServices
-                .Where(st => st.Id == storeServiceId)
-                .FirstOrDefault();
-
-            var bookedHours = this.data.BookedHours
-                .Where(bh => bh.StoreServiceId == storeServiceId && bh.Date == currDate)
-                .Select(b => b.StartFrom).ToList();
-
-            var store = this.data.Stores.Where(s => s.Id == storeService.StoreId).FirstOrDefault();
-
-            int storeOpen = store.OpenHour;
-            int storeClose = store.CloseHour;
-
-            List<int> freeHours = new List<int>();
-
-            for (int currHour = storeOpen; currHour < storeClose; currHour++)
-            {
-                if (!bookedHours.Contains(currHour))
-                {
-                    freeHours.Add(currHour);
-                }
-            }
-
-            var model = new BookAnHourViewModel
-            {
-                ShopName = store.Name,
-                Price = storeService.Price,
-                StoreServiceName = storeService.Name,
-                FreeHours = freeHours,
-                StoreServiceId = storeService.Id,
-                StoreId = store.Id,
-                CurrDate = currDate
-            };
+            var model = this.storeServiceService.FreeHours(storeServiceId, currDate);
 
             return this.View(model);
         }
 
         public IActionResult CreateAnHour(int hour, string storeName, string storeServiceName, string storeServiceId, string storeId, string date)
         {
-            DateTime currDate;
-
-            if (!DateTime.TryParseExact(date, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out currDate))
-            {
-                return this.RedirectToAction("BookAnHour");
-            }
-
-
-            var hourToBook = new BookedHour
-            {
-                Id = Guid.NewGuid().ToString(),
-                StartFrom = hour,
-                StoreName = storeName,
-                StoreServiceName = storeServiceName,
-                StoreServiceId = storeServiceId,
-                StoreId = storeId,
-                Date = currDate
-            };
-
-            var storeService = this.data.StoreServices
-                .Where(st => st.Id == storeServiceId)
-                .FirstOrDefault();
-
-            storeService.bookedHours.Add(hourToBook);
+            DateTime currDate = this.storeServiceService.ParseDate(date);
 
             var user = this.GetCurrentUser();
 
-            user.BookedHours.Add(hourToBook);
+            var hourId = this.storeServiceService.BookHour(hour, storeName, storeServiceName, storeServiceId, storeId, currDate, user);
 
-            this.data.SaveChanges();
+            if(hourId == null)
+            {
+                return this.RedirectToAction("bookAnHour");
+            }
 
             return RedirectToAction("MyBookedHours", "User");
         }

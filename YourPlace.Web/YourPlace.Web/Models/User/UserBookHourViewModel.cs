@@ -22,6 +22,7 @@ namespace YourPlace.Web.Models.User
 
         [Required]
         public string StoreName { get; set; }
+
         public DateTime Date { get; set; }
     }
 }
