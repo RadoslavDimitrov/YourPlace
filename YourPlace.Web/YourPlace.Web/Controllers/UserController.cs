@@ -18,18 +18,15 @@ namespace YourPlace.Web.Controllers
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
         private readonly RoleManager<IdentityRole> roleManager;
-        private readonly ApplicationDbContext data;
         private readonly IUserService userService;
 
         public UserController(UserManager<User> userManager,
             SignInManager<User> signInManager,
-            ApplicationDbContext data,
             RoleManager<IdentityRole> roleManager,
             IUserService userService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
-            this.data = data;
             this.roleManager = roleManager;
             this.userService = userService;
         }

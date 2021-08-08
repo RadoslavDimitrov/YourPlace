@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
 
-using YourPlace.Data.Data;
-using YourPlace.Models.Models;
 using YourPlace.Web.Infrastructure;
 using YourPlace.Web.Models.Comment;
 using YourPlace.Web.Services.Comment;
@@ -16,13 +12,10 @@ namespace YourPlace.Web.Controllers
     [Authorize]
     public class CommentController : Controller
     {
-        private readonly ApplicationDbContext data;
         private readonly ICommentService commentService;
 
-        public CommentController(ApplicationDbContext data, 
-            ICommentService commentService)
+        public CommentController(ICommentService commentService)
         {
-            this.data = data;
             this.commentService = commentService;
         }
 

@@ -1,4 +1,6 @@
 ﻿
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,23 +12,20 @@ namespace YourPlace.Web.Services.Comment
     public class CommentService : ICommentService
     {
         private readonly ApplicationDbContext data;
+        private readonly IConfigurationProvider mapper;
 
-        public CommentService(ApplicationDbContext data)
+        public CommentService(ApplicationDbContext data,
+            IMapper mapper)
         {
             this.data = data;
+            this.mapper = mapper.ConfigurationProvider;
         }
 
         public List<MineCommentsViewModel> CommentsByUser(string userId)
         {
             var comments = this.data.Comments
                 .Where(c => c.UserId == userId)
-                .Select(c => new MineCommentsViewModel()
-                {
-                    Id = c.Id,
-                    Description = c.Description,
-                    StoreName = c.Store.Name,
-                    StoreId = c.StoreId
-                })
+                .ProjectTo<MineCommentsViewModel>(this.mapper)
                 .ToList();
 
             return comments;

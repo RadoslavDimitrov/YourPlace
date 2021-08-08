@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,10 +14,13 @@ namespace YourPlace.Web.Services.Store
     public class StoreService : IStoreService
     {
         private readonly ApplicationDbContext data;
+        private readonly IConfigurationProvider mapper;
 
-        public StoreService(ApplicationDbContext data)
+        public StoreService(ApplicationDbContext data, 
+            IMapper mapper)
         {
             this.data = data;
+            this.mapper = mapper.ConfigurationProvider;
         }
 
         public AllStoreServiceModel All(string searchTerm, string townName, string districtName, int currentPage, int storesPerPage)
@@ -186,19 +191,7 @@ namespace YourPlace.Web.Services.Store
         public ListStoreViewModel ListStore(string storeId)
         {
             var model = this.data.Stores.Where(store => store.Id == storeId)
-                .Select(store => new ListStoreViewModel
-                {
-                    Id = store.Id,
-                    Name = store.Name,
-                    Type = store.Type,
-                    Description = store.Description,
-                    OpenHour = store.OpenHour,
-                    CloseHour = store.CloseHour,
-                    Town = store.Town.Name,
-                    District = store.District.Name,
-                    PictureUrl = store.PictureUrl,
-                    Raiting = store.Raitings.Select(r => r.StoreRaiting).Average()
-                })
+                .ProjectTo<ListStoreViewModel>(this.mapper)
                 .FirstOrDefault();
 
             if (model != null)
@@ -225,18 +218,7 @@ namespace YourPlace.Web.Services.Store
         {
             var bookedHours = this.data.BookedHours
                 .Where(b => b.StoreId == storeId)
-                .Select(b => new ListStoreBookedHoursViewModel()
-                {
-                    Id = b.Id,
-                    Date = b.Date,
-                    StartFrom = b.StartFrom,
-                    StoreId = b.StoreId,
-                    StoreName = b.StoreName,
-                    StoreServiceId = b.StoreServiceId,
-                    StoreServiceName = b.StoreServiceName,
-                    UserId = b.UserId,
-                    Username = b.User.UserName
-                })
+                .ProjectTo<ListStoreBookedHoursViewModel>(this.mapper)
                 .ToList();
 
             return bookedHours;

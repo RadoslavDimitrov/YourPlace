@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
+
 using YourPlace.Data.Data;
 using YourPlace.Web.Models.User;
 
@@ -12,14 +16,16 @@ namespace YourPlace.Web.Services.User
         private readonly ApplicationDbContext data;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<YourPlace.Models.Models.User> userManager;
+        private readonly IConfigurationProvider mapper;
 
         public UserService(ApplicationDbContext data,
             RoleManager<IdentityRole> roleManager,
-            UserManager<YourPlace.Models.Models.User> userManager)
+            UserManager<YourPlace.Models.Models.User> userManager, IMapper mapper)
         {
             this.data = data;
             this.roleManager = roleManager;
             this.userManager = userManager;
+            this.mapper = mapper.ConfigurationProvider;
         }
 
         public YourPlace.Models.Models.User GetCurrentUser(string userId)
@@ -27,11 +33,17 @@ namespace YourPlace.Web.Services.User
             return this.data.Users.Where(u => u.Id == userId).FirstOrDefault();
         }
 
+
         public string GetCurrentUserStoreId(string userId)
         {
             var user = this.GetCurrentUser(userId);
 
             return user.StoreId;
+        }
+
+        public YourPlace.Models.Models.User GetUser(string id)
+        {
+            return this.data.Users.Where(u => u.Id == id).FirstOrDefault();
         }
 
         public bool isUserOwner(string userId, string storeId)
@@ -43,15 +55,7 @@ namespace YourPlace.Web.Services.User
         {
             var bookHour = this.data.BookedHours
                 .Where(b => b.UserId == userId)
-                .Select(b => new UserBookHourViewModel
-                {
-                    Id = b.Id,
-                    StartFrom = b.StartFrom,
-                    StoreName = b.StoreName,
-                    StoreServiceId = b.StoreServiceId,
-                    StoreServiceName = b.StoreServiceName,
-                    Date = b.Date
-                })
+                .ProjectTo<UserBookHourViewModel>(this.mapper)
                 .ToList();
 
 

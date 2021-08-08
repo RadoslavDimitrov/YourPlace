@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 using YourPlace.Models.Models;
 using YourPlace.Web.Services.StoreService;
+using YourPlace.Web.Services.User;
 
 namespace YourPlace.Web.Controllers
 {
@@ -18,14 +19,14 @@ namespace YourPlace.Web.Controllers
     {
         private string today = DateTime.UtcNow.ToString("MM/dd/yyyy");
 
-        private readonly ApplicationDbContext data;
         private readonly IStoreServiceService storeServiceService;
+        private readonly IUserService userService;
 
-        public StoreServiceController(ApplicationDbContext data, 
-            IStoreServiceService storeServiceService)
+        public StoreServiceController(IStoreServiceService storeServiceService, 
+            IUserService userService)
         {
-            this.data = data;
             this.storeServiceService = storeServiceService;
+            this.userService = userService;
         }
 
         public IActionResult Create(string storeId)
@@ -110,7 +111,7 @@ namespace YourPlace.Web.Controllers
         {
             DateTime currDate = this.storeServiceService.ParseDate(date);
 
-            var user = this.GetCurrentUser();
+            var user = this.userService.GetCurrentUser(this.User.GetId());
 
             var hourId = this.storeServiceService.BookHour(hour, storeName, storeServiceName, storeServiceId, storeId, currDate, user);
 
@@ -122,11 +123,5 @@ namespace YourPlace.Web.Controllers
             return RedirectToAction("MyBookedHours", "User");
         }
 
-        private User GetCurrentUser()
-        {
-            var userId = this.User.GetId();
-
-            return this.data.Users.Where(u => u.Id == userId).FirstOrDefault();
-        }
     }
 }

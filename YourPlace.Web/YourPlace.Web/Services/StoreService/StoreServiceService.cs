@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -14,12 +16,15 @@ namespace YourPlace.Web.Services.StoreService
     {
         private readonly ApplicationDbContext data;
         private readonly IUserService userService;
+        private readonly IConfigurationProvider mapper;
 
         public StoreServiceService(ApplicationDbContext data,
-            IUserService userService)
+            IUserService userService, 
+            IMapper mapper)
         {
             this.data = data;
             this.userService = userService;
+            this.mapper = mapper.ConfigurationProvider;
         }
 
         public string BookHour(int hour, 
@@ -198,13 +203,7 @@ namespace YourPlace.Web.Services.StoreService
         DetailsStoreServiceViewModel IStoreServiceService.ServiceById(string id)
         {
             var service = this.data.StoreServices.Where(st => st.Id == id)
-                .Select(s => new DetailsStoreServiceViewModel()
-                {
-                    Id = s.Id,
-                    Name = s.Name,
-                    Description = s.Description,
-                    Price = s.Price
-                })
+                .ProjectTo<DetailsStoreServiceViewModel>(this.mapper)
                 .FirstOrDefault();
 
             return service;

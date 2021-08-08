@@ -17,7 +17,7 @@ namespace YourPlace.Web.Services.Raiting
 
         public bool IsUserRate(string userId, string storeId)
         {
-            //TODO CHeck logic
+
             if(this.data.Raitings.Any(r => r.StoreId == storeId && r.UserId == userId))
             {
                 return true;

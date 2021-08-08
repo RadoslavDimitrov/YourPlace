@@ -16,5 +16,7 @@ namespace YourPlace.Web.Services.User
         string GetCurrentUserStoreId(string userId);
 
         bool isUserOwner(string userId, string storeId);
+
+        YourPlace.Models.Models.User GetUser(string id);
     }
 }
