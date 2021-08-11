@@ -10,21 +10,21 @@
 }
 else
 {
-    <h3 class="text-center">Comments</h3>
+    <h3 class="text-center">My comments</h3>
 
     foreach (var comment in Model)
     {
         <div class="mt-3">
             <div>
-                Comment: @comment.Description
+                My comment: @comment.Description
             </div>
             <div class="row">
                 <div class="col">
-                    <h3 class="one">Store: @comment.StoreName</h3>
+                    <h3 class="one">For store: @comment.StoreName</h3>
                 </div>
                 <div class="col-auto">
                     <a class="btn btn-danger pull-right" asp-controller="Comment" asp-action="Delete" asp-route-Id="@comment.Id" role="button">Delete</a>
-                    <a class="btn btn-success pull-right" asp-controller="Store" asp-action="Visit" asp-route-storeId="@comment.StoreId" role="button">Visit</a>
+                    <a class="btn btn-success pull-right" asp-controller="Store" asp-action="Visit" asp-route-storeId="@comment.StoreId" role="button">Visit store</a>
                 </div>
             </div>
         </div>

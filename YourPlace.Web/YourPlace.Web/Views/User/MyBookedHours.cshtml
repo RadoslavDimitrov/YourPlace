@@ -1,33 +1,78 @@
-﻿@model List<UserBookHourViewModel>;
+﻿@model ListUserBookedHoursViewModel;
 
 @{
     ViewBag.Title = "User booked hours";
 }
 
-@if (!Model.Any())
+@if (!Model.PastDays.Any())
 {
-    <h3>You have no booked hours!</h3>
+    <h2 class="mt-5">No previous hours!</h2>
 }
-else 
+else
 {
-<div>
-    @foreach (var hour in Model)
-    {
-        <div class="col-mb-3" mb-3>
-            @hour.StartFrom - hour
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="mb-3">
+                Past booked hours:
+            </h3>
+            @foreach (var bookedHour in Model.PastDays.OrderBy(x => x.Date).ThenBy(x => x.StartFrom))
+            {
+        <div>
+            You had hour for @bookedHour.StoreServiceName in @bookedHour.StoreName
+            at @bookedHour.StartFrom:00 on (@bookedHour.Date.DayOfWeek) @bookedHour.Date.ToString("MM/dd/yyyy")
         </div>
-        <div class="col-mb-3" mb-3>
-            @hour.StoreName - Store name
+            }
         </div>
-        <div class="col-mb-3" mb-3>
-            @hour.StoreServiceName - Store Service Name
-        </div>
-        <div class="col-mb-3" mb-3>
-            (@hour.Date.DayOfWeek) @hour.Date.ToString("MM/dd/yyyy") - Date
-        </div>
-    }
-</div>
+    </div>
 }
+
+@if (!Model.CurrDay.Any())
+{
+    <h2 class="mt-5">No hours for today!</h2>
+}
+else
+{
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="mb-3">
+                Booked hours for today:
+            </h3>
+            @foreach (var bookedHour in Model.CurrDay.OrderBy(x => x.Date).ThenBy(x => x.StartFrom))
+            {
+        <div>
+            Today you have hour for @bookedHour.StoreServiceName in @bookedHour.StoreName
+            at @bookedHour.StartFrom:00 on (@bookedHour.Date.DayOfWeek) @bookedHour.Date.ToString("MM/dd/yyyy")
+        </div>
+            }
+        </div>
+    </div>
+}
+
+@if (!Model.CommingDays.Any())
+{
+    <h2 class="mt-5">No hours for next days!</h2>
+}
+else
+{
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="mb-3">
+                Booked hours for next days:
+            </h3>
+            @foreach (var bookedHour in Model.CommingDays.OrderBy(x => x.Date).ThenBy(x => x.StartFrom))
+            {
+        <div>
+            You have booked hour for @bookedHour.StoreServiceName in @bookedHour.StoreName
+            at @bookedHour.StartFrom:00 on (@bookedHour.Date.DayOfWeek) @bookedHour.Date.ToString("MM/dd/yyyy")
+        </div>
+            }
+        </div>
+    </div>
+}
+
+
+
+
 
 
 

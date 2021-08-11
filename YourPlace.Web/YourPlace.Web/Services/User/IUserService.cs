@@ -7,7 +7,7 @@ namespace YourPlace.Web.Services.User
 {
     public interface IUserService
     {
-        List<UserBookHourViewModel> UserBookedHours(string userId);
+        ListUserBookedHoursViewModel UserBookedHours(string userId);
 
         ProfileUserViewModel UserWithRole(string userId);
 

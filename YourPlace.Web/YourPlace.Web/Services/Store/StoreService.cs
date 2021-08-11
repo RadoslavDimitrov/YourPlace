@@ -214,14 +214,32 @@ namespace YourPlace.Web.Services.Store
             return model;
         }
 
-        public List<ListStoreBookedHoursViewModel> StoreBookedHours(string storeId)
+        public StoreBookedHoursViewModel StoreBookedHours(string storeId)
         {
             var bookedHours = this.data.BookedHours
                 .Where(b => b.StoreId == storeId)
                 .ProjectTo<ListStoreBookedHoursViewModel>(this.mapper)
                 .ToList();
 
-            return bookedHours;
+            var result = new StoreBookedHoursViewModel();
+
+            foreach (var hour in bookedHours)
+            {
+                if(hour.Date.Day < DateTime.UtcNow.Day)
+                {
+                    result.PastDays.Add(hour);
+                }
+                else if(hour.Date.Day > DateTime.UtcNow.Day)
+                {
+                    result.CommingDays.Add(hour);
+                }
+                else
+                {
+                    result.CurrDay.Add(hour);
+                }
+            }
+
+            return result;
         }
     }
 }

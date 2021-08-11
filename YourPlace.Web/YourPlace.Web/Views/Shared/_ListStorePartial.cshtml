@@ -1,0 +1,13 @@
+﻿@model ListStoreViewModel;
+
+<div class="card mb-3">
+    <img class="card-img-top img-fluid" src="@Model.PictureUrl" alt="Sample Photo">
+    <div class="card-body">
+        <h1 class="card-title text-center">@Model.Name</h1>
+        <h2 class="text-center">@Model.Description</h2>
+        <h2>Work for you from @Model.OpenHour:00 to @Model.CloseHour:00</h2>
+        <h2>Addres: @Model.Town , @Model.District</h2>
+        <h3>type: @Model.Type</h3>
+        <h2>Rating: @(Model.Raiting != null ? Model.Raiting : "No rating")</h2>
+    </div>
+</div>

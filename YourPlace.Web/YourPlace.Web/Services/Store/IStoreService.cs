@@ -35,7 +35,7 @@ namespace YourPlace.Web.Services.Store
 
         public ListStoreViewModel ListStore(string storeId);
 
-        public List<ListStoreBookedHoursViewModel> StoreBookedHours(string storeId);
+        public StoreBookedHoursViewModel StoreBookedHours(string storeId);
 
 
     }

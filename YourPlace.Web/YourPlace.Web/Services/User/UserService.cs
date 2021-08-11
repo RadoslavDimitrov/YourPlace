@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -51,15 +52,32 @@ namespace YourPlace.Web.Services.User
             return this.data.Users.Any(u => u.Id == userId && u.StoreId == storeId);
         }
 
-        public List<UserBookHourViewModel> UserBookedHours(string userId)
+        public ListUserBookedHoursViewModel UserBookedHours(string userId)
         {
             var bookHour = this.data.BookedHours
                 .Where(b => b.UserId == userId)
                 .ProjectTo<UserBookHourViewModel>(this.mapper)
                 .ToList();
 
+            var result = new ListUserBookedHoursViewModel();
 
-            return bookHour;
+            foreach (var hour in bookHour)
+            {
+                if (hour.Date.Day < DateTime.UtcNow.Day)
+                {
+                    result.PastDays.Add(hour);
+                }
+                else if (hour.Date.Day > DateTime.UtcNow.Day)
+                {
+                    result.CommingDays.Add(hour);
+                }
+                else
+                {
+                    result.CurrDay.Add(hour);
+                }
+            }
+
+            return result;
         }
 
         public ProfileUserViewModel UserWithRole(string userId)

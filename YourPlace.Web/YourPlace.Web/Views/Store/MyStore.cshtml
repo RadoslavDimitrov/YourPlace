@@ -14,15 +14,7 @@
 else
 {
 <div>
-    <img src="@Model.PictureUrl" class="img-fluid" alt="Sample Photo" />
-    <h2>@Model.Name - Store name</h2>
-    <h2>@Model.Type - Store type</h2>
-    <h2>@Model.Description</h2>
-    <h2>@Model.OpenHour - Opens at </h2>
-    <h2>@Model.CloseHour - Close at</h2>
-    <h2>@Model.Town - At city</h2>
-    <h2>@Model.District</h2>
-    <h2>@Model.Raiting</h2>
+    <partial name="_ListStorePartial", model="@Model"/>
 
     @if (!Model.StoreServices.Any())
     {

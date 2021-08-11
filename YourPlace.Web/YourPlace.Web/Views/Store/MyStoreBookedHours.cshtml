@@ -1,29 +1,76 @@
-﻿@model List<ListStoreBookedHoursViewModel>;
+﻿@model StoreBookedHoursViewModel;
 
 @{
     ViewBag.Title = "Store booked hours";
 }
 
-@if (!Model.Any())
+@if (!Model.PastDays.Any())
 {
-    <h2>No booked hours!</h2>
+    <h2 class="mt-5">No previous hours!</h2>
 }
 else
 {
-    <div class="row">
+    <div class="row mt-5">
         <div class="col-12">
-            <h3 class="mb-3">Booked hours for store @Model[0].StoreName</h3>
-            @foreach (var bookedHour in Model)
+            <h3 class="mb-3">
+                Past booked hours:
+            </h3>
+            @foreach (var bookedHour in Model.PastDays.OrderBy(x => x.Date).ThenBy(x => x.StartFrom))
             {
-                <div class="mb-3">Booked hour</div>
                 <div>
                     @bookedHour.Username has booked hour for @bookedHour.StoreServiceName
-                    at @bookedHour.Date in @bookedHour.StartFrom
+                    in @bookedHour.StartFrom:00 at @bookedHour.Date.ToString("MM/dd/yyyy")
                 </div>
             }
         </div>
     </div>
 }
+
+@if (!Model.CurrDay.Any())
+{
+    <h2 class="mt-5">No hours for today!</h2>
+}
+else
+{
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="mb-3">
+                Booked hours for today:
+            </h3>
+            @foreach (var bookedHour in Model.CurrDay.OrderBy(x => x.Date).ThenBy(x => x.StartFrom))
+            {
+                <div>
+                    @bookedHour.Username has booked hour for @bookedHour.StoreServiceName
+                    in @bookedHour.StartFrom:00 at @bookedHour.Date.ToString("MM/dd/yyyy")
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@if (!Model.CommingDays.Any())
+{
+    <h2 class="mt-5">No hours for next days!</h2>
+}
+else
+{
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="mb-3">
+                Booked hours for next days:
+            </h3>
+            @foreach (var bookedHour in Model.CommingDays.OrderBy(x => x.Date).ThenBy(x => x.StartFrom))
+            {
+                <div>
+                    @bookedHour.Username has booked hour for @bookedHour.StoreServiceName
+                    in @bookedHour.StartFrom:00 at @bookedHour.Date.ToString("MM/dd/yyyy")
+                </div>
+            }
+        </div>
+    </div>
+}
+
+
 
 
 
