@@ -25,7 +25,7 @@ namespace YourPlace.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CreateCommentViewModel model ,string storeId)
+        public IActionResult Create(CreateCommentViewModel model, string storeId)
         {
             var userId = this.User.GetId();
 

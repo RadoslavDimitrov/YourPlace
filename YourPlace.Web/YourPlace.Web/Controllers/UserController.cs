@@ -116,14 +116,7 @@ namespace YourPlace.Web.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        private IActionResult InvalidUsernameOrPassword(LoginUserFormModel model)
-        {
-            const string InvalidUsernameOrPassword = "Wrong username or password!";
-
-            ModelState.AddModelError(string.Empty, InvalidUsernameOrPassword);
-
-            return this.View(model);
-        }
+        
 
         [Authorize]
         public IActionResult MyBookedHours()
@@ -186,5 +179,14 @@ namespace YourPlace.Web.Controllers
             return RedirectToAction("Profile", "User");
         }
 
+
+        private IActionResult InvalidUsernameOrPassword(LoginUserFormModel model)
+        {
+            const string InvalidUsernameOrPassword = "Wrong username or password!";
+
+            ModelState.AddModelError(string.Empty, InvalidUsernameOrPassword);
+
+            return this.View(model);
+        }
     }
 }
