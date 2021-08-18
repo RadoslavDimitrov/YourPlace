@@ -4,6 +4,13 @@
  An web application that has a purpouse to combine all people that can suggest a survice!
  Like an auto mechanic, cosmetic, hairdresser, lawyer..
  
+ After you register, you can create store and start distribiuting your service for a fixed price.
+ You can have multiple services for your store.
+ You can visit other ppl stores, take a look at their services and if you like one you can book a hour.
+ You can comment other ppl stores and live raiting.
+ You can see all comments for your store.
+ You can see all booked hours for you services and booked hours that you book for other stores.
+ 
  These are automaticaly seeded
  
  <h2>Admin</h2>
