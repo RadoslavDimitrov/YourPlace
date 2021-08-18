@@ -111,7 +111,14 @@ namespace YourPlace.Web.Controllers
         {
             var store = this.storeService.ListStore(storeId);
 
-            if(store == null)
+            var user = this.userService.GetCurrentUser(this.User.GetId());
+
+            if(user.StoreId == store.Id)
+            {
+                return RedirectToAction("MyStore");
+            }
+
+            if (store == null)
             {
                 return RedirectToAction("All");
             }
