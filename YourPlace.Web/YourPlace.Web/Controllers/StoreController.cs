@@ -31,11 +31,10 @@ namespace YourPlace.Web.Controllers
         [Authorize]
         public IActionResult Create()
         {
-            var user = this.userService.GetCurrentUser(this.User.GetId());
 
-            var userStoreId = user.StoreId;
+            var userStoreId = this.userService.GetCurrentUserStoreId(this.User.GetId());
 
-            if(userStoreId != null)
+            if (userStoreId != null)
             {
                 return this.RedirectToAction("MyStore");
             }
@@ -111,9 +110,9 @@ namespace YourPlace.Web.Controllers
         {
             var store = this.storeService.ListStore(storeId);
 
-            var user = this.userService.GetCurrentUser(this.User.GetId());
+            var userStoreId = this.userService.GetCurrentUserStoreId(this.User.GetId());
 
-            if(user.StoreId == store.Id)
+            if(userStoreId == store.Id)
             {
                 return RedirectToAction("MyStore");
             }

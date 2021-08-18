@@ -37,9 +37,9 @@ namespace YourPlace.Web.Services.User
 
         public string GetCurrentUserStoreId(string userId)
         {
-            var user = this.GetCurrentUser(userId);
+            var storeId = this.data.Users.Where(u => u.Id == userId).Select(u => u.StoreId).FirstOrDefault();
 
-            return user.StoreId;
+            return storeId;
         }
 
         public YourPlace.Models.Models.User GetUser(string id)
